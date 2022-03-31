@@ -1,0 +1,72 @@
+---
+title: "SeylerHyyppa_Final Project"
+author: "Reino Hyyppa & Meghan Seyler"
+date: "3/31/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+Reminders for knitting commands in code chunks - can delete when we're done
+
+* Knitting commands in code chunks:
+ - `include = FALSE` - code is run, but neither code nor results appear in knitted file
+ - `echo = FALSE`    - code not included in knitted file, but results are
+ - `eval = FALSE`    - code is not run in the knitted file
+ - `message = FALSE` - messages do not appear in knitted file
+ - `warning = FALSE` - warnings do not appear...
+ - `fig.cap = "..."` - adds a caption to graphical results
+
+```{r include=FALSE}
+#examine working directory
+getwd()
+
+#loading packages for spatial analysis 
+library(tidyverse)
+library(sf)
+library(leaflet)
+library(mapview)
+library(RColorBrewer)
+
+```
+
+
+### 2.2.1 Read in and explore NC counties
+
+Below we read in the USA counties shapefile, filtering for just the NC features (NC has a state FIPS code of "37"...). We also see that `sf` plays nice with "tidyverse" syntax (e.g. pipes) and functions (e.g. filter). The `sf` package also includes some new spatial methods for exploring our data (e.g. `st_bbox` which draws a bounding box around all spatial features).
+
+```{r read.filtered.records.from.shapefile.to.sf.object}
+#
+counties_sf<- st_read('./Data/Spatial/cb_2018_us_county_20m.shp') %>% 
+  filter(STATEFP == 37) #Filter for just NC Counties
+
+#
+colnames(counties_sf)
+
+#
+st_crs(counties_sf) 
+
+
+#
+nrow(counties_sf)
+
+#Reveal the extent of this dataset via the st_bbox() function
+st_bbox(counties_sf)
+
+#View the data
+head(counties_sf)
+
+#Plot the data, colored by area of land in each county
+mapView(counties_sf, zcol = "AWATER")
+
+
+
+
+
+
+
+
+
