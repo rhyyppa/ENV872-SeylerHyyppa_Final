@@ -1,2 +1,6 @@
 # ENV872-SeylerHyyppa_Final
-Final Project - ENV 872
+Repository for ENV 872 Final Project 
+
+Student team:
+Reino Hyyppa
+Meghan Seyler 
