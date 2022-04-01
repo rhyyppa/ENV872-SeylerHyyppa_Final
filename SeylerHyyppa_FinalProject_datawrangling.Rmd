@@ -1,5 +1,5 @@
 ---
-title: "SeylerHyyppa_Final Project"
+title: "SeylerHyyppa_FinalProject_datawrangling"
 author: "Reino Hyyppa & Meghan Seyler"
 date: "3/31/2022"
 output: html_document
@@ -53,7 +53,7 @@ USA Counties Shape File | Spatial data frame that will establish the map of NC. 
 
 ## 2.2 Wrangling Process
 
-```{r include=FALSE}
+```{r include=FALSE, warning = FALSE}
 #examine working directory
 getwd()
 
@@ -66,14 +66,22 @@ library(RColorBrewer)
 library(dplyr)
 library(lubridate)
 
+#loading packages for geocoding
+#install.packages("tidygeocoder")
+library(tidygeocoder)
+library(tibble)
+library(dplyr)
+
 ```
 
 
 ```{r data.loading.wrangling warning=FALSE}
 #read in Landfill location raw data filter by waste type
-SW_FacilityList_CD <- read_csv('./Data/Raw/SW_FacilityList_ColRename.csv')%>%
+SW_FacilityList_CD <- read_csv('./Data/Raw/SW_FacilityList_Col_A3.csv')%>%
   filter(Waste_Type == 'CD')
 
+svi2018_nc_raw_full <- read.csv(
+  'https://svi.cdc.gov/Documents/Data/2018_SVI_Data/CSV/States_Counties/NorthCarolina_COUNTY.csv')
 
 #read in social vulnerability raw data 
 #Read the 2018 SVI county-level dataset for NC
@@ -89,6 +97,29 @@ counties_sf<- st_read('./Data/Spatial/cb_2018_us_county_20m.shp') %>%
 
 ```
 
+geocode function extract addresses from the input dataframe and pass this data to the geo function which executest he geocoding queries. All extra arguments (...) given to geocode() are passed to geo() 
+```{r geocoding}
+#using site waste facility address to add latitude and longitude to sW_Facility_List_CD datafra
+SW_FacilityList_CD_geo<-geo(
+  address = SW_FacilityList_CD$Address3, method = "osm",
+  lat = latitude, long = longitude
+)
+
+#making data frame to manually input latitude and longitude for two addresses
+address<-c("172 Landfill Rd NE", 	"40592b Stony Gap Road")
+latitude<-c(34.04426,35.31502)
+longitude<-c(-78.25620,-80.15286)
+SW_missing_df<-data.frame(address,latitude,longitude)
+
+#merging geo dataframe with manual dataframe and removing the NA rows
+SW_Facility_CD_geo_merge<-rbind(SW_FacilityList_CD_geo,SW_missing_df, by=c("address","longitude","latitude"))
+SW_Facility_processed<- SW_Facility_CD_geo_merge %>% slice(-c(6,64,82))
+
+#writing csv to save wrangled data as a csv in processed folder 
+write.csv(SW_Facility_processed, row.names = FALSE, file = "Z:/ENV872/ENV872-SeylerHyyppa_Final/Data/Processed/SW_Facility_Processed.csv")
+
+```
+
 # 3 Exploratory Analysis
 (Rubric: flow between text and visualization is cohesive & relevant exploratory information is visualized)
 
@@ -97,7 +128,6 @@ counties_sf<- st_read('./Data/Spatial/cb_2018_us_county_20m.shp') %>%
 # 5 Visualization
 
 # 6 Summary and Conclusions
-
 
 
 
