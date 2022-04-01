@@ -1,4 +1,4 @@
-# ENV872-SeylerHyyppa_Final
+# ENV872_SeylerHyyppa_Final
 Repository for ENV 872 Final Project 
 
 Student team:
