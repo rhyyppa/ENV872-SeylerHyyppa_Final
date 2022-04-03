@@ -80,6 +80,14 @@ library(dplyr)
 SW_FacilityList_CD <- read_csv('./Data/Raw/SW_FacilityList_Col_A3.csv')%>%
   filter(Waste_Type == 'CD')
 
+<<<<<<< HEAD
+=======
+head(SW_FacilityList_CD)
+
+svi2018_nc_raw_full <- read.csv(
+  'https://svi.cdc.gov/Documents/Data/2018_SVI_Data/CSV/States_Counties/NorthCarolina_COUNTY.csv')
+
+>>>>>>> f19002ea911171d77895ff16c3af80aa3625d81e
 #read in social vulnerability raw data 
 #Read the 2018 SVI county-level dataset for NC
 svi2018_nc_raw <- read.csv(
@@ -88,7 +96,6 @@ svi2018_nc_raw <- read.csv(
   select(COUNTY, FIPS, LOCATION, E_TOTPOP, E_POV, E_MINRTY)
 
 #Read in USA counties shapefile and filter for just NC - stateFP 37
-
 counties_sf<- st_read('./Data/Spatial/cb_2018_us_county_20m.shp') %>% 
   filter(STATEFP == 37) 
 
@@ -101,7 +108,8 @@ SW_FacilityList_CD_geo<-geo(
   address = SW_FacilityList_CD$Address3, method = "osm",
   lat = latitude, long = longitude
 )
-
+?geo()
+head(SW_FacilityList_CD_geo)
 #making data frame to manually input latitude and longitude for two addresses
 address<-c("172 Landfill Rd NE", 	"40592b Stony Gap Road")
 latitude<-c(34.04426,35.31502)
@@ -135,6 +143,24 @@ counties_sf_svi_SW_join <- counties_sf_svi %>%
 # 3 Exploratory Analysis
 (Rubric: flow between text and visualization is cohesive & relevant exploratory information is visualized)
 
+```{r analyze data}
+
+landfill.sites <- read.csv("../ENV872-SeylerHyyppa_Final/Data/Processed/SW_Facility_Processed.csv", stringsAsFactors = TRUE)
+
+head(landfill.sites)
+
+#Convert to a spatial dataframe
+landfill.sf <- landfill.sites %>% 
+  st_as_sf(coords = c('longitude','latitude'),
+           crs=4326)
+
+# view using ggplot
+ggplot(data = landfill.sf) + geom_sf()
+
+#View using mapview
+mapview(landfill.sf)
+
+```
 # 4 Analysis 
 
 # 5 Visualization
