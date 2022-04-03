@@ -80,9 +80,6 @@ library(dplyr)
 SW_FacilityList_CD <- read_csv('./Data/Raw/SW_FacilityList_Col_A3.csv')%>%
   filter(Waste_Type == 'CD')
 
-svi2018_nc_raw_full <- read.csv(
-  'https://svi.cdc.gov/Documents/Data/2018_SVI_Data/CSV/States_Counties/NorthCarolina_COUNTY.csv')
-
 #read in social vulnerability raw data 
 #Read the 2018 SVI county-level dataset for NC
 svi2018_nc_raw <- read.csv(
@@ -115,10 +112,25 @@ SW_missing_df<-data.frame(address,latitude,longitude)
 SW_Facility_CD_geo_merge<-rbind(SW_FacilityList_CD_geo,SW_missing_df, by=c("address","longitude","latitude"))
 SW_Facility_processed<- SW_Facility_CD_geo_merge %>% slice(-c(6,64,82))
 
+#join 
+SW_Facility_processed <- SW_Facility_processed %>% 
+  left_join(SW_FacilityList_CD, by = c("address" = "Address3"))
+
 #writing csv to save wrangled data as a csv in processed folder 
 write.csv(SW_Facility_processed, row.names = FALSE, file = "Z:/ENV872/ENV872-SeylerHyyppa_Final/Data/Processed/SW_Facility_Processed.csv")
 
 ```
+
+```{r joinging.dataframes}
+#join counties sf and svi dataframe
+counties_sf_svi <- counties_sf %>% 
+  left_join(svi2018_nc_raw, by = c("GEOID" = "FIPS"))
+
+counties_sf_svi_SW_join <- counties_sf_svi %>% 
+  left_join(SW_Facility_processed, by = c("NAME" = "County.y"))
+
+```
+
 
 # 3 Exploratory Analysis
 (Rubric: flow between text and visualization is cohesive & relevant exploratory information is visualized)
