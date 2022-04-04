@@ -1,0 +1,51 @@
+---
+title: "SeylerHyyppa_FinalProject_dataexploration"
+author: "Meghan Seyler"
+date: "4/3/2022"
+output: html_document
+---
+
+```{r include=FALSE, warning = FALSE}
+#examine working directory
+getwd()
+
+#loading packages for spatial analysis 
+library(tidyverse)
+library(sf)
+library(leaflet)
+library(mapview)
+library(RColorBrewer)
+library(dplyr)
+library(lubridate)
+
+#loading packages for geocoding
+#install.packages("tidygeocoder")
+library(tidygeocoder)
+library(tibble)
+library(dplyr)
+
+```
+
+# 3 Exploratory Analysis
+(Rubric: flow between text and visualization is cohesive & relevant exploratory information is visualized)
+
+
+```{r analyze data}
+
+landfill.sites <- read.csv("../ENV872-SeylerHyyppa_Final/Data/Processed/SW_Facility_Processed.csv", stringsAsFactors = TRUE)
+
+head(landfill.sites)
+
+#Convert to a spatial dataframe
+landfill.sf <- landfill.sites %>% 
+  st_as_sf(coords = c('longitude','latitude'),
+           crs=4326)
+
+# view using ggplot
+ggplot(data = landfill.sf) + geom_sf()
+
+#View using mapview
+mapview(landfill.sf)
+
+```
+

@@ -1,0 +1,12 @@
+---
+title: "SeylerHyyppa_FinalProject_dataanalysis"
+author: "Meghan Seyler"
+date: "4/3/2022"
+output: html_document
+---
+
+# 4 Analysis 
+
+# 5 Visualization
+
+# 6 Summary and Conclusions
