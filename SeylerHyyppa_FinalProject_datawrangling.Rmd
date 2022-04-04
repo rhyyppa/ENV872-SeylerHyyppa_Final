@@ -80,14 +80,10 @@ library(dplyr)
 SW_FacilityList_CD <- read_csv('./Data/Raw/SW_FacilityList_Col_A3.csv')%>%
   filter(Waste_Type == 'CD')
 
-<<<<<<< HEAD
-=======
-head(SW_FacilityList_CD)
 
 svi2018_nc_raw_full <- read.csv(
   'https://svi.cdc.gov/Documents/Data/2018_SVI_Data/CSV/States_Counties/NorthCarolina_COUNTY.csv')
 
->>>>>>> f19002ea911171d77895ff16c3af80aa3625d81e
 #read in social vulnerability raw data 
 #Read the 2018 SVI county-level dataset for NC
 svi2018_nc_raw <- read.csv(
@@ -108,7 +104,7 @@ SW_FacilityList_CD_geo<-geo(
   address = SW_FacilityList_CD$Address3, method = "osm",
   lat = latitude, long = longitude
 )
-?geo()
+
 head(SW_FacilityList_CD_geo)
 #making data frame to manually input latitude and longitude for two addresses
 address<-c("172 Landfill Rd NE", 	"40592b Stony Gap Road")
