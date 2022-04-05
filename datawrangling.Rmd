@@ -118,6 +118,7 @@ SW_FacilityList_CD_complete <- na.omit(SW_FacilityList_CD_geo)
 # merge geocoded site waste facilities with site waste facility data found using google maps
 SW_FacilityList_complete <- rbind(SW_FacilityList_CD_complete, SW_Coordinates)
 
+#permit numbers missing 3412-CDLF-1995 and 3505-TP-2020
 dim(SW_FacilityList_complete)
 
 #selecting columns we want to use for further analysis
@@ -130,6 +131,7 @@ dim(SW_FacilityList_processed)
 write.csv(SW_FacilityList_processed, row.names = FALSE, file = "Z:/ENV872/ENV872-SeylerHyyppa_Final/Data/Processed/SW_FacilityList_processed.csv")
 
 ```
+
 
 ```{r joining.dataframes}
 #join counties sf and svi dataframe
