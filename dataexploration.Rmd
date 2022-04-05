@@ -9,25 +9,74 @@ output: html_document
 #examine working directory
 getwd()
 
-#loading packages for spatial analysis 
+#loading packages for exploratory analysis 
 library(tidyverse)
 library(sf)
 library(leaflet)
 library(mapview)
 library(RColorBrewer)
 library(dplyr)
-library(lubridate)
-
-#loading packages for geocoding
-#install.packages("tidygeocoder")
-library(tidygeocoder)
-library(tibble)
-library(dplyr)
-
+library(knitr)
 ```
 
 # 3 Exploratory Analysis
 (Rubric: flow between text and visualization is cohesive & relevant exploratory information is visualized)
+
+```{r explore svi data}
+#select columns of interest from SVI data
+svi2018_nc_raw <- read.csv(
+  'https://svi.cdc.gov/Documents/Data/2018_SVI_Data/CSV/States_Counties/NorthCarolina_COUNTY.csv',
+  colClasses = c('FIPS' = 'factor')) %>% 
+  select(COUNTY, FIPS, LOCATION, E_TOTPOP, E_POV, E_MINRTY)
+
+#check structure
+str(svi2018_nc_raw)
+
+#check colnames
+colnames(svi2018_nc_raw)
+
+#investigate what location column includes
+glimpse(svi2018_nc_raw$LOCATION)
+
+#total poverty and minority statistics by county
+povdividedbytotal_col<-(svi2018_nc_raw$E_POV/svi2018_nc_raw$E_TOTPOP)*100
+
+minrtydividedbytotal_col<-(svi2018_nc_raw$E_MINRTY/svi2018_nc_raw$E_TOTPOP)*100
+
+svi2018_nc_processed<-svi2018_nc_raw%>%
+  add_column(Percent_POV = povdividedbytotal_col)%>%
+  add_column(Percent_MINRTY = minrtydividedbytotal_col)
+
+
+svi2018_nc_poverty_top10 <- svi2018_nc_processed %>%
+    group_by(COUNTY) %>%
+    top_n(10, Percent_POV)
+    
+sort(svi2018_nc_poverty_top10$Percent_POV, decreasing)
+
+svi2018_nc_minrty_top10 <- svi2018_nc_processed %>%
+    group_by(COUNTY) %>%
+    top_n(10, Percent_MINRTY)
+
+```
+
+```{r}
+knitr::kable(head(svi2018_nc_poverty_top10[,7]), 
+             "simple", 
+             round(2),
+             col.names = c("Poverty Percentage"),
+             align = 'c',
+             caption = "Summary Statistics of Rate of Poverty by County in North Carolina 2018"
+)
+
+knitr::kable(head(svi2018_nc_minority_summary[,1:5]), 
+             "simple", 
+             round(2),
+             col.names = c("Lakename", "Mean", "Minimum","Maximum","Standard Deviation"), 
+             align = 'c',
+             caption = "Summary Statistics of Minority by County in North Carolina 2018"
+) 
+```
 
 
 ```{r analyze data}
