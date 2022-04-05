@@ -77,8 +77,16 @@ library(dplyr)
 
 ```{r data.loading.wrangling warning=FALSE}
 #read in Landfill location raw data filter by waste type
-SW_FacilityList_CD <- read_csv('./Data/Raw/SW_FacilityList_Col_A3.csv')%>%
+#SW_FacilityList_CD <- read_csv('./Data/Raw/SW_FacilityList_Col_A3.csv')%>%
+#  filter(Waste_Type == 'CD')
+
+# read in landfill location raw data filter by waste type 'CD'
+SW_test <- read.csv("./Data/Raw/SW_FacilityList_actual.csv", stringsAsFactors = TRUE) %>%
   filter(Waste_Type == 'CD')
+
+# read in landfill location data with correct facility coordinates using google maps
+SW_Coordinates <- read.csv('./Data/Raw/CD_Facility_Coord.csv') %>%
+  select(County:long)
 
 
 svi2018_nc_raw_full <- read.csv(
@@ -100,28 +108,17 @@ counties_sf<- st_read('./Data/Spatial/cb_2018_us_county_20m.shp') %>%
 geocode function extract addresses from the input dataframe and pass this data to the geo function which executest he geocoding queries. All extra arguments (...) given to geocode() are passed to geo() 
 ```{r geocoding}
 #using site waste facility address to add latitude and longitude to sW_Facility_List_CD datafra
-SW_FacilityList_CD_geo<-geo(
-  address = SW_FacilityList_CD$Address3, method = "osm",
-  lat = latitude, long = longitude
-)
+SW_FacilityList_CD_geo <- SW_test %>%
+  geocode(street = Address3, city = City, state = Sate, method="census")
 
-head(SW_FacilityList_CD_geo)
-#making data frame to manually input latitude and longitude for two addresses
-address<-c("172 Landfill Rd NE", 	"40592b Stony Gap Road")
-latitude<-c(34.04426,35.31502)
-longitude<-c(-78.25620,-80.15286)
-SW_missing_df<-data.frame(address,latitude,longitude)
+# remove rows with NAs in the longitude and latitude
+SW_FacilityList_CD_complete <- na.omit(SW_FacilityList_CD_geo)
 
-#merging geo dataframe with manual dataframe and removing the NA rows
-SW_Facility_CD_geo_merge<-rbind(SW_FacilityList_CD_geo,SW_missing_df, by=c("address","longitude","latitude"))
-SW_Facility_processed<- SW_Facility_CD_geo_merge %>% slice(-c(6,64,82))
-
-#join 
-SW_Facility_processed <- SW_Facility_processed %>% 
-  left_join(SW_FacilityList_CD, by = c("address" = "Address3"))
+# merge geocoded site waste facilities with site waste facility data found using google maps
+SW_FacilityList_complete <- rbind(SW_FacilityList_CD_complete, SW_Coordinates)
 
 #writing csv to save wrangled data as a csv in processed folder 
-write.csv(SW_Facility_processed, row.names = FALSE, file = "Z:/ENV872/ENV872-SeylerHyyppa_Final/Data/Processed/SW_Facility_Processed.csv")
+write.csv(SW_FacilityList_CD_complete, row.names = FALSE, file = "Z:/ENV872/ENV872-SeylerHyyppa_Final/Data/Processed/SW_Facility_Processed.csv")
 
 ```
 
