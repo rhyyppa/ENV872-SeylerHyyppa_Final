@@ -81,7 +81,7 @@ library(dplyr)
 #  filter(Waste_Type == 'CD')
 
 # read in landfill location raw data filter by waste type 'CD'
-SW_test <- read.csv("./Data/Raw/SW_FacilityList_actual.csv", stringsAsFactors = TRUE) %>%
+SW_FacilityList_CD <- read.csv("./Data/Raw/SW_FacilityList_actual.csv", stringsAsFactors = TRUE) %>%
   filter(Waste_Type == 'CD')
 
 # read in landfill location data with correct facility coordinates using google maps
@@ -108,7 +108,7 @@ counties_sf<- st_read('./Data/Spatial/cb_2018_us_county_20m.shp') %>%
 geocode function extract addresses from the input dataframe and pass this data to the geo function which executest he geocoding queries. All extra arguments (...) given to geocode() are passed to geo() 
 ```{r geocoding}
 #using site waste facility address to add latitude and longitude to sW_Facility_List_CD datafra
-SW_FacilityList_CD_geo <- SW_test %>%
+SW_FacilityList_CD_geo <- SW_FacilityList_CD %>%
   geocode(street = Address3, city = City, state = Sate, method="census")
 
 # remove rows with NAs in the longitude and latitude
