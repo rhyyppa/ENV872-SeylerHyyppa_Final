@@ -1,0 +1,80 @@
+County,Waste Type,Operation Type,Permit ID,Permit Name,Status,Contact,Telephone,Address1,Address2,Address3,Address_Full,City,Sate,Zip
+Alamance,CD,LF,0104-CDLF-1993,Austin Quarter C&D Unit,Active,Mr. Richard Hill,(336) 376-0411,2701 Austin Quarter Road,,2701 Austin Quarter Road,"2701 Austin Quarter Rd, Graham, NC",Graham,NC,27253
+Alamance,CD,LF,0105-CDLF-1998,Cobles C&D Landfill,Active,Mrs. Deanna Martin,(336) 264-4894,5833 Foster Store Rd,,5833 Foster Store Rd,"5833 Foster Store Rd, Liberty, NC",Liberty,NC,27298
+Alamance,CD,TP,0105-TP-,Cobles C&D T&P,Active,Mrs. Deanna Martin,(336) 565-4750,5833 Foster Store Road,,5833 Foster Store Road,"5833 Foster Store Road, Liberty, NC",Liberty,NC,27298
+Alexander,CD,LF,0201-CDLF-1997,Alexander County CDLF,Active,Mr. Josh Mitchell,(828) 632-1101,621 Liledoun Rd,,621 Liledoun Rd,"621 Liledoun Rd, Taylorsville, NC",Taylorsville,NC,28681
+Avery,CD,LF,0603-CDLF-1996,Avery County C&D Landfill,Active,Mr. William Foster,(828) 737-5420,,2175 Brushy Creek Rd,2175 Brushy Creek Rd,"2175 Brushy Creek Rd, Newland, NC",Newland,NC,28657
+Brunswick,CD,LF*,1007-CDLF-1997,Brunswick County CDLF,Active,Mr. Jeremy Baker,(910) 253-6314,,172 Landfill Rd NE,172 Landfill Rd NE,"172 Landfill Rd NE, Bolivia, NC",Bolivia,NC,28422
+Buncombe,CD,LF,1107-CDLF-1998,Buncombe County C&D Unit,Active,Mr. Dane Pedersen,(828) 250-5460,81 Panther Branch Road,,81 Panther Branch Road,"81 Panther Branch Road, Alexander, NC",Alexander,NC,28701
+Burke,CD,LF,1203-CDLF-2014,Burke County Johns River Waste Management,Active,Mr. Mark Delehant,(828) 764-9064,,2500 Marsh Trail,2500 Marsh Trail,"2500 Marsh Trail, Morganton, NC",Morganton,NC,28680-1486
+Cabarrus,CD,LF,1302-CDLF-2006,Cabarrus County CDLF,Active,Mr. Kevin Grant,(704) 920-3209,,4441 Irish Potato Road,4441 Irish Potato Road,"4441 Irish Potato Road, Concord, NC",Concord,NC,28026
+Cabarrus,CD,LF,1306-CDLF-2000,Highway 49 C&D Landfill & Recycling Greenway Waste,Active,Mr. Andrew Brown,(704) 201-5944,2105 Speedrail Court,,2105 Speedrail Court,"2105 Speedrail Court, Concord, NC",Concord,NC,28025
+Cabarrus,CD,Compost,1306-COMPOST-2019,Highway 49 C&D Landfill & Recycling Greenway Waste,Active,Mr. Andrew Burris,(704) 201-5944,2105 Speedrail Court,,2105 Speedrail Court,"2105 Speedrail Court, Concord, NC",Concord,NC,28025
+Carteret,CD,Trans,1607-TRANSFER-2019,Green Recycling Transfer Station,Active,Mr. Kevin Dail,(910) 284-2309,,812 Hibbs Rd,812 Hibbs Rd,"812 Hibbs Rd, Newport, NC",Newport,NC,28546
+Catawba,CD,LF,1803-CDLF-,Blackburn Resource Recovery C&D Facility,Active,Mr. Rodney Hamby,(704) 462-1348,,3993 Rocky Ford Road,3993 Rocky Ford Road,"3993 Rocky Ford Road, Newton, NC",Newton,NC,28658
+Chatham,CD,TP,1912-TP-2020,Pinnacle Waste Goldson Facility,Active,Mrs. Amy Hildreth,(919) 708-8230,,67 Gulf Rd.,67 Gulf Rd.,"67 Gulf Rd., Goldston, NC",Goldston,NC,27252
+Cleveland,CD,LF*,2301-CDLF-1997,Cleveland County CDLF,Active,Mr. Josh Davis,(704) 447-8204,,1607 Airport Rd,1607 Airport Rd,"1607 Airport Rd, Shelby, NC",Shelby,NC,28150
+Columbus,CD,TP,2404-TRANSFER-2020,Big D T&P Facility,Active,Mr. Donald Grainger,(843) 340-8815,,1535 Old 87 Road,1535 Old 87 Road,"1535 Old 87 Road, Tabor City, NC",Tabor City,NC,28463
+Cumberland,CD,LF*,2601-CDLF-1997,Cumberland County C&D Unit,Active,Ms. Amanda Bader,(910) 438-4041,698 Ann Street,,698 Ann Street,"698 Ann Street, Fayetteville, NC",Fayetteville,NC,28301
+Cumberland,CD,Trans,2613-TRANSFER-2010,AAA Hauling Of NC Inc,Active,Mr. Kenneth Hardin,(910) 321-6037,1171 S Eastern Blvd,,1171 S Eastern Blvd,"1171 S Eastern Blvd, Fayetteville, NC",Fayetteville,NC,28306
+Currituck,CD,Trans,2705T-TRANSFER-2011,Soundside C&D Waste Transfer & Recycling Center,Active,Mrs. Kim Newbern,(252) 491-8666,7565 Caratoke Hwy,,7565 Caratoke Hwy,"7565 Caratoke Hwy, Jarvisburg, NC",Jarvisburg,NC,27947
+Currituck,CD,Trans,2706-TRANSFER-2013,"Bay Disposal, LLC",Active,Mrs. Pamela Marlowe,(252) 455-4103,8546 Caratoke Hwy,,8546 Caratoke Hwy,"8546 Caratoke Hwy, Powells Point, NC",Powells Point,NC,27966
+Dare,CD,LF,2803-CDLF-1995,Dare County C&D Landfill,Active,Mr. Dougals Huff,(252) 475-5843,,1603 Cub Rd,1603 Cub Rd,"1603 Cub Rd, Manteo, NC",Manteo,NC,27954
+Davidson,CD,Trans,2908-TRANSFER-2013,"Todco, Inc. - C&D Transfer",Active,Mr. Todd Warfford,(336) 248-2001,1123 Roy Lopp Road,,1123 Roy Lopp Road,"1123 Roy Lopp Road, Lexington, NC",Lexington,NC,27292
+Durham,CD,TP,3217-MWP-2019,Wall Recycling Holman Street Facility,Active,Mr. Blake Chavers,(919) 745-0762,2310 Garner Rd.,,2310 Garner Rd.,"2310 Garner Rd., Raleigh, NC",Raleigh,NC,27610
+Edgecombe,CD,LF*,3301-CDLF-1997,Edgecombe County CDLF,Active,Ms. Gloria Moseley,(258) 827-4253,,2872 Colonial Road,2872 Colonial Road,"2872 Colonial Road, Tarboro, NC",Tarboro,NC,27886
+Forsyth,CD,LF,3412-CDLF-1995,"Winston-Salem, City of Old Salisbury Road CDLF",Active,Mrs. Janis McHargue,(336) 747-7310,3336 Old Salisbury Road,,3336 Old Salisbury Road,"3336 Old Salisbury Road, Winston-Salem, NC",Winston-Salem,NC,27127
+Forsyth,CD,Trans,3424-TRANSFER-2020,Abbey Green Transfer Station,Active,Mr. Jason Tarkenton,(336) 382-9707,5030 Overdale Road,,5030 Overdale Road,"5030 Overdale Road, Winston-Salem, NC",Winston-Salem,NC,27017
+Franklin,CD,MatRecovery,3505-MWP-2020,Wall Recycling,Active,Mr. Gary Getty,(919) 452-3740,2310 Garner Rd.,,2310 Garner Rd.,"2310 Garner Rd., Raleigh, NC",Raleigh,NC,27610
+Franklin,CD,TP,3505-TP-2020,Wall Recycling,Active,Mr. Gary Getty,(919) 452-3740,2310 Garner Rd.,,2310 Garner Rd.,"2310 Garner Rd., Raleigh, NC",Raleigh,NC,27610
+Gaston,CD,LF*,3606-CDLF-1995,Gaston County C&D Landfill,Active,Mr. Dan Ziehm,(704) 862-6795,3155 Philadelphia Church Road,,3155 Philadelphia Church Road,"3155 Philadelphia Church Road, Dallas, NC",Dallas,NC,28168
+Greene,CD,LF*,4002-CDLF-1997,Greene County CDLF,Active,Mr. David Jones,(252) 747-5720,,105 Landfill Rd.,105 Landfill Rd.,"105 Landfill Rd., Snow Hill, NC",Snow Hill,NC,28580
+Guilford,CD,LF*,4103-CDLF-1998,"Greensboro, City of White Street Landfill",Active,Mr. Richard Lovett,(336) 373-4188,2503 White Street,,2503 White Street,"2503 White Street, Greensboro, NC",Greensboro,NC,27405
+Guilford,CD,LF,4116-CDLF-2012,"WI High Point Landfill, LLC",Active,Mr. Seth Heath,(336) 668-3712,5830 Riverdale Dr,,5830 Riverdale Dr,"5830 Riverdale Dr, Jamestown, NC",Jamestown,NC,27282
+Guilford,CD,LF,4117-CDLF-2008,A-1 Sandrock C&D Landfill,Active,Mr. Jason Tarkenton,(336) 382-9707,,2091 Bishop Road,2091 Bishop Road,"2091 Bishop Road, Greensboro, NC",Greensboro,NC,27406
+Guilford,CD,TP,4117-TP-2009,A-1 Sandrock Treatment and Processing Facility,Active,Mr. Jason Tarkenton,(336) 382-9707,,2091 Bishop Road,2091 Bishop Road,"2091 Bishop Road, Greensboro, NC",Greensboro,NC,27406
+Guilford,CD,Trans,4122T-TRANSFER-2012,WI Burnt Poplar Transfer LLC,Active,Mr. Seth Heath,(336) 668-3712,6313 Burnt Poplar Rd,,6313 Burnt Poplar Rd,"6313 Burnt Poplar Rd, Greensboro, NC",Greensboro,NC,27409
+Halifax,CD,LF,4204-CDLF-2013,Halifax County Landfill,Active,Mr. Greg Griffin,(252) 904-7363,,921 Liles Rd.,921 Liles Rd.,"921 Liles Rd., Halifax, NC",Halifax,NC,27939
+Harnett,CD,LF*,4302-CDLF-2018,Harnett County Dunn-Erwin C&D Landfill,Active,Mr. Chad Beane,(910) 814-6004,,449 Daniels Road,449 Daniels Road,"449 Daniels Road, Dunn, NC",Dunn,NC,28334
+Harnett,CD,LF,4303-CDLF-1997,Harnett Co. Anderson Creek C&D Landfill,Active,Mr. Chad Beane,(910) 814-6004,,1086 Poplar Drive,1086 Poplar Drive,"1086 Poplar Drive, Lillington, NC",Lillington,NC,27546
+Henderson,CD,TP,4508-TP-2020,"Garbage Pal, LLC",Active,Mr. Jared Breneman,(828) 575-3160,424 Mills Gap Road,,424 Mills Gap Road,"424 Mills Gap Road, Arden, NC",Arden,NC,28704
+Johnston,CD,LF,5103-CDLF-,Johnston County C&D Landfill,Active,Mr. Rick Proctor,(919) 938-4750,,680 County Home Road,680 County Home Road,"680 County Home Road, Smithfield, NC",Smithfield,NC,27577
+Jones,CD,TP,5202-TP-2012,Maysville C&D Recycling & Recovery Facility,Active,Mr. Kevin Dail,(910) 284-2309,,11710 Hwy 17 N,11710 Hwy 17 N,"11710 Hwy 17 N, Jacksonville, NC",Jacksonville,NC,28546
+Jones,CD,LF,5203-CDLF-2013,Maysville C & D,Active,Mr. Kevin Dail,(910) 284-2309,,11710 Hwy 17 N,11710 Hwy 17 N,"11710 Hwy 17 N, Jacksonville, NC",Jacksonville,NC,28546
+Lenoir,CD,LF*,5403-CDLF-1997,Lenoir County CDLF,Active,Ms. Kim Hill,(252) 566-4194,2949 Hodges Farm Road,,2949 Hodges Farm Road,"2949 Hodges Farm Road, La Grange, NC",La Grange,NC,28551
+Lincoln,CD,LF,5503-CDLF-1999,Lincoln County C&D Unit,Active,Mr. Mark Bivins,(704) 736-8477,5291 Crouse Road,,5291 Crouse Road,"5291 Crouse Road, Crouse, NC",Crouse,NC,28033
+Lincoln,CD,LF,5504-CDLF-1999,Lake Norman Landfill,Active,Mr. Timothy Ginn,(480) 459-7339,7099 Quarry Ln,,7099 Quarry Ln,"7099 Quarry Ln, Stanley, NC",Stanley,NC,28164
+Madison,CD,LF,5803-CDLF-1995,Madison County C&D Unit,Active,Mr. Sam Lunsford,(828) 649-2311,271 Craig Rudisill Road,,271 Craig Rudisill Road,"271 Craig Rudisill Road, Marshall, NC",Marshall,NC,28753
+Martin,CD,LF,5901-CDLF-1995,Martin County C&D Landfill,Active,Mr. Justin Harrison,(252) 799-6552,,1445 Landfill Rd,1445 Landfill Rd,"1445 Landfill Rd, Williamston, NC",Williamston,NC,27892
+Mecklenburg,CD,LF,6013-CDLF-1993,Greenway Waste Solutions at North Meck,Active,Mr. Roger Barnes,(704) 895-3367,15300 Holbrooks Rd,-,15300 Holbrooks Rd,"15300 Holbrooks Rd, Huntersville, NC",Huntersville,NC,28078
+Moore,CD,LF,6301-CDLF-1992,Moore County C&D Landfill,Active,Mr. David Lambert,(910) 947-4318,,456 Turning Leaf Way,456 Turning Leaf Way,"456 Turning Leaf Way, Carthage, NC",Carthage,NC,28327
+Nash,CD,LF,6403-CDLF-2000,Nash County C&D Landfill,Active,Mr. Ben Barnes,(252) 459-9899,,3057 Duke Rd,3057 Duke Rd,"3057 Duke Rd, Nashville, NC",Nashville,NC,27856
+New Hanover,CD,MatRecovery,6504-MWP-2016,New Hanover County Materials Recovery & Recycling Facility,Active,Mr. Joe Suleyman,(910) 798-4403,3002 US Highway 421 North,5210 US Highway 421 North,3002 US Highway 421 North,"3002 US Highway 421 North, Wilmington, NC",Wilmington,NC,28401
+Onslow,CD,Trans,6712-TRANSFER-2016,Folkstone C&D Recycling Collection/Transfer Facility,Active,Mr. Kevin Dail,(910) 284-2309,,1172 Hwy 172,1172 Hwy 172,"1172 Hwy 172, Jacksonville, NC",Jacksonville,NC,28546
+Orange,CD,LF,6804-CDLF-2005,Orange County CDLF,Active,Mr. Robert Willias,(919) 968-2788,1207 Eubanks Road,,1207 Eubanks Road,"1207 Eubanks Road, Chapel Hill, NC",Chapel Hill,NC,27516
+Pasquotank,CD,LF,7002-CDLF-1996,Pasquotank County C&D Landfill,Active,Mr. Bradley Gardner,(252) 335-4105,983 Simpson Ditch Road,,983 Simpson Ditch Road,"983 Simpson Ditch Road, Elizabeth City, NC",Elizabeth City,NC,27907
+Pitt,CD,MatRecovery,7404-MWP-2016,Pitt County Materials Recovery & Recycling Facility,Active,Mr. John Demary,(252) 902-3355,3025 Landfill Road,,3025 Landfill Road,"3025 Landfill Road, Greenville, NC",Greenville,NC,27834
+Pitt,CD,LF,7407-CDLF-2009,C & D Landfill Inc,Active,Mrs. April Haltigan,(252) 752-8274,802 Recycling Lane,,802 Recycling Lane,"802 Recycling Lane, Greenville, NC",Greenville,NC,27834
+Randolph,CD,LF,7606-CDLF-2001,Wall Recycling CDLF,Active,Mr. Dan Jarboe,(919) 906-2747,2310 Garner Road,385 Gold Hill Road,2310 Garner Road,"2310 Garner Road, Raleigh, NC",Raleigh,NC,27610
+Randolph,CD,LF,7606-CDLF-2021,Wall Recycling CDLF,Active,Mr. Dan Jarboe,(919) 906-2747,,385 Gold Hill Rd,385 Gold Hill Rd,"385 Gold Hill Rd, Raleigh, NC",Raleigh,NC,27610
+Randolph,CD,TP,7606-TP-2021,Wall Recycling Facility,Active,Mr. Dan Jarboe,(919) 906-2747,2310 Garner Rd,385 Gold Hill Road,2310 Garner Rd,"2310 Garner Rd, Raleigh, NC",Raleigh,NC,27610
+Robeson,CD,LF*,7803-CDLF-1997,Robeson County CDLF,Active,Mr. Harrell Walters,(910) 865-3348,,246 Landfill Road,246 Landfill Road,"246 Landfill Rd, St Pauls, NC",Saint Pauls,NC,28384
+Rutherford,CD,LF,8103-CDLF-2002,Rutherford County C&D,Active,Mr. James Kilgo,(828) 287-6002,,656 Laurel Hill Dr.,656 Laurel Hill Dr.,"656 Laurel Hill Dr., Rutherfordton, NC",Rutherfordton,NC,28139
+Sampson,CD,LF,8202-CDLF-1996,"Sampson County Disposal, LLC",Active,Mr. Joseph Smith,(910) 525-4132,,7434 Roseboro Hwy,7434 Roseboro Hwy,"7434 Roseboro Hwy, Roseboro, NC",Roseboro,NC,28382
+Scotland,CD,LF*,8301-CDLF-1997,Scotland County CDLF,Active,Mr. Bryant Higgins,(910) 844-9206,,10681 Patterson Rd,10681 Patterson Rd,"10681 Patterson Rd, Laurinburg, NC",Laurinburg,NC,28353
+Stanly,CD,LF*,8401-CDLF-1997,"Albemarle, City of CDLF",Active,Mr. Darren Preslar,(704) 984-9680,,40592b Stony Gap Road,40592b Stony Gap Road,"40592b Stony Gap Road, Albemarle, NC",Albemarle,NC,28002-0190
+Union,CD,LF*,9001-CDLF-1998,Union County C&D,Active,Mr. Christopher Medlin,(704) 989-1949,2125 Austin Chaney Road,,2125 Austin Chaney Road,"2125 Austin Chaney Road, Wingate, NC",Wingate,NC,28174
+Wake,CD,TP,9224-MWP-2012,"Wake Reclamation, LLC",Active,Mr. Donald Plessinger,(919) 557-9583,421 Raleigh View Road,,421 Raleigh View Road,"421 Raleigh View Road, Raleigh, NC",Raleigh,NC,27610
+Wake,CD,LF,9226-CDLF-2020,"Shotwell Landfill, Inc",Active,Mr. Josh Daher,(919) 832-8234,,4724 Smithfield Rd,4724 Smithfield Rd,"4724 Smithfield Rd, Raleigh, NC",Raleigh,NC,27603
+Wake,CD,Trans,9227T-TRANSFER-2012,Thornton Road Mixed Waste Transfer and Recycling Center,Active,Mr. Karl Regali,(919) 433-0906,,5565 Thornton Rd.,5565 Thornton Rd.,"5565 Thornton Rd., Durham, NC",Durham,NC,27703
+Wake,CD,LF,9228-CDLF-2001,Red Rock Disposal C&D Landfill,Active,Mr. Donald Plessinger,(919) 557-9583,7130 New Landfill Drive,,7130 New Landfill Drive,"7130 New Landfill Drive, Holly Springs, NC",Holly Springs,NC,27540
+Wake,CD,Trans,9229T-TRANSFER-2020,Shotwell Transfer Station II,Active,Mr. Josh Daher,(919) 832-8234,103 Rupert Rd,,103 Rupert Rd,"103 Rupert Rd, Raleigh, NC",Raleigh,NC,27603
+Wake,CD,LF,9230-CDLF-2014,"Greenway Waste Solutions of Apex, LLC",Active,Mr. Grant Kiser,(919) 367-2895,5940 Old Smithfield Rd,,5940 Old Smithfield Rd,"5940 Old Smithfield Rd, Apex, NC",Apex,NC,27539
+Wake,CD,LF,9231-CDLF-2012,Brownfield Road C&D Landfill,Active,Mr. Donald Plessinger,(919) 557-9583,7130 New Landfill Drive,,7130 New Landfill Drive,"7130 New Landfill Drive, Holly Springs, NC",Holly Springs,NC,27540
+Wake,CD,Trans,9234-TRANSFER-2012,Wake Transfer Station,Active,Mr. Donald Plessinger,(919) 557-9583,9220 Durant Rd.,,9220 Durant Rd.,"9220 Durant Rd., Raleigh, NC",Raleigh,NC,27616
+Wake,CD,Trans,9237T-TRANSFER-2020,"Capitol Waste Transfer, LLC",Active,Mr. Josh Daher,(919) 832-8234,,424 Warehouse Dr,424 Warehouse Dr,"424 Warehouse Dr, Raleigh, NC",Raleigh,NC,27603
+Wake,CD,MatRecovery,9240-MWP-2017,Elite Waste Services Pristine Water Facility,Active,Mr. Brian Kiefer,(919) 704-0312,,520 Pristine Water Dr.,520 Pristine Water Dr.,"520 Pristine Water Dr., Raleigh, NC",Raleigh,NC,27610
+Wake,CD,MatRecovery,9242-MWP-2020,Wall Recycling - Garner Road,Active,Mr. Dustin Hill,(919) 582-7777,2310 Garner Road,2126 Garner Road,2310 Garner Road,"2310 Garner Road, Raleigh, NC",Raleigh,NC,27610
+Washington,CD,LF,9404-CDLF-1996,Washington County C&D Landfill,Active,Mr. Danny Reynolds,(252) 793-5615,,718 Landfill Road,718 Landfill Road,"718 Landfill Road, Plymouth, NC",Plymouth,NC,27962
+Wayne,CD,LF*,9601-CDLF-1997,Wayne County CDLF,Active,Mr. Tim Rogers,(919) 689-2994,460B South Landfill Road,,460B South Landfill Road,"460B South Landfill Road, Dudley, NC",Dudley,NC,28333
+Wilson,CD,LF,9809-CDLF-2004,Wilson County Westside C&D Landfill,Active,Mr. Andy Davis,(252) 399-2823,,2400 NC Hwy 42 East,2400 NC Hwy 42 East,"2400 NC Hwy 42 East, Wilson, NC",Wilson,NC,27894

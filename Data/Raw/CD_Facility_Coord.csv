@@ -1,0 +1,21 @@
+County,Waste_Type,Operation_Type,Permit_ID,Permit_Name,Status,Contact,Telephone,Address1,Address2,Address3,City,Sate,Zip,lat,long
+Alexander,CD,LF,0201-CDLF-1997,Alexander County CDLF,Active,Mr. Josh Mitchell,(828) 632-1101,,2500 Paynes Dairy Road,2500 Paynes Dairy Road,Taylorsville,NC,28681,35.83881,-81.14778
+Avery,CD,LF,0603-CDLF-1996,Avery County C&D Landfill,Active,Mr. William Foster,(828) 737-5420,,2175 Brushy Creek Rd,2175 Brushy Creek Rd,Spruce Pine,NC,28777,35.95062,-82.0005
+Cabarrus,CD,LF,1302-CDLF-2006,Cabarrus County CDLF,Active,Mr. Kevin Grant,(704) 920-3209,,4441 Irish Potato Road,4441 Irish Potato Road,Concord,NC,28026,35.47773,-80.51696
+Chatham,CD,TP,1912-TP-2020,Pinnacle Waste Goldson Facility,Active,Mrs. Amy Hildreth,(919) 708-8230,,13415 Hwy 421,13415 Hwy 421,Goldston,NC,27252,35.57112,-79.29744
+Cleveland,CD,LF*,2301-CDLF-1997,Cleveland County CDLF,Active,Mr. Josh Davis,(704) 447-8204,,1607 Airport Rd,1607 Airport Rd,Shelby,NC,28150,35.32646,-81.48357
+Columbus,CD,TP,2404-TRANSFER-2020,Big D T&P Facility,Active,Mr. Donald Grainger,(843) 340-8815,,1535 Old 87 Road,1535 Old 87 Road,Delco,NC,28436,34.3141,-78.20673
+Cumberland,CD,Trans,2613-TRANSFER-2010,AAA Hauling Of NC Inc,Active,Mr. Kenneth Hardin,(910) 321-6037,1171 S Eastern Blvd,,1171 S Eastern Blvd,Fayetteville,NC,28306,35.02764,-78.88372
+Dare,CD,LF,2803-CDLF-1995,Dare County C&D Landfill,Active,Mr. Dougals Huff,(252) 475-5843,,1603 Cub Rd,1603 Cub Rd,Manns Harbor,NC,27953,35.83132,-75.81818
+Edgecombe,CD,LF*,3301-CDLF-1997,Edgecombe County CDLF,Active,Ms. Gloria Moseley,(258) 827-4253,,2872 Colonial Road,2872 Colonial Road,Tarboro,NC,27886,35.82237,-77.56314
+Greene,CD,LF*,4002-CDLF-1997,Greene County CDLF,Active,Mr. David Jones,(252) 747-5720,,105 Landfill Rd.,105 Landfill Rd.,Walstonburg,NC,27888,35.52534,-77.69504
+Halifax,CD,LF,4204-CDLF-2013,Halifax County Landfill,Active,Mr. Greg Griffin,(252) 904-7363,,921 Liles Rd.,921 Liles Rd.,Littleton,NC,27850,36.37977,-77.81444
+Harnett,CD,LF,4303-CDLF-1997,Harnett Co. Anderson Creek C&D Landfill,Active,Mr. Chad Beane,(910) 814-6004,,1086 Poplar Drive,1086 Poplar Drive,Lillington,NC,27546,35.29316,-78.99493
+Jones,CD,TP,5202-TP-2012,Maysville C&D Recycling & Recovery Facility,Active,Mr. Kevin Dail,(910) 284-2309,,11710 Hwy 17 N,11710 NC Hwy 17,Maysville,NC,28555,34.9274,-77.23988
+Jones,CD,LF,5203-CDLF-2013,Maysville C & D,Active,Mr. Kevin Dail,(910) 284-2309,,11710 Hwy 17 N,11710 NC Hwy 17,Maysville,NC,28555,34.9274,-77.23988
+Martin,CD,LF,5901-CDLF-1995,Martin County C&D Landfill,Active,Mr. Justin Harrison,(252) 799-6552,,1445 Landfill Rd,1445 Landfill Rd,Williamston,NC,27892,35.86478,-77.09429
+Moore,CD,LF,6301-CDLF-1992,Moore County C&D Landfill,Active,Mr. David Lambert,(910) 947-4318,,456 Turning Leaf Way,456 Turning Leaf Way,Aberdeen,NC,28315,35.14759,-79.48121
+Onslow,CD,Trans,6712-TRANSFER-2016,Folkstone C&D Recycling Collection/Transfer Facility,Active,Mr. Kevin Dail,(910) 284-2309,,1172 Hwy 172,1172 Hwy 172,Jacksonville,NC,28546,34.53931339,-77.50271081
+Pitt,CD,MatRecovery,7404-MWP-2016,Pitt County Materials Recovery & Recycling Facility,Active,Mr. John Demary,(252) 902-3355,3025 Landfill Road,,3025 Landfill Road,Greenville,NC,27834,35.59802446,-77.43172905
+Robeson,CD,LF*,7803-CDLF-1997,Robeson County CDLF,Active,Mr. Harrell Walters,(910) 865-3348,,246 Landfill Road,246 Landfill Road,Saint Pauls,NC,28384,34.79254286,-78.91135747
+Scotland,CD,LF*,8301-CDLF-1997,Scotland County CDLF,Active,Mr. Bryant Higgins,(910) 844-9206,,10681 Patterson Rd,10681 Patterson Rd,Maxton,NC,28352,34.72503024,-79.38609846
