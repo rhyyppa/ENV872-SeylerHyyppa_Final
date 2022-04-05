@@ -80,9 +80,13 @@ library(dplyr)
 SW_FacilityList_CD <- read.csv("./Data/Raw/SW_FacilityList_actual.csv", stringsAsFactors = TRUE) %>%
   filter(Waste_Type == 'CD')
 
+dim(SW_FacilityList_CD)
+
 # read in landfill location data with correct facility coordinates using google maps
 SW_Coordinates <- read.csv('./Data/Raw/CD_Facility_Coord.csv') %>%
   select(County:long)
+
+dim(SW_Coordinates)
 
 #read in social vulnerability raw data 
 svi2018_nc_raw_full <- read.csv(
@@ -106,18 +110,24 @@ geocode function extract addresses from the input dataframe and pass this data t
 SW_FacilityList_CD_geo <- SW_FacilityList_CD %>%
   geocode(street = Address3, city = City, state = Sate, method="census")
 
+dim(SW_FacilityList_CD_geo)
+
 # remove rows with NAs in the longitude and latitude
 SW_FacilityList_CD_complete <- na.omit(SW_FacilityList_CD_geo)
 
 # merge geocoded site waste facilities with site waste facility data found using google maps
 SW_FacilityList_complete <- rbind(SW_FacilityList_CD_complete, SW_Coordinates)
 
+dim(SW_FacilityList_complete)
+
 #selecting columns we want to use for further analysis
 SW_FacilityList_processed <- SW_FacilityList_complete %>% 
   select(County, Waste_Type, Permit_ID, Permit_Name, Address3, City, Zip, lat, long)
 
+dim(SW_FacilityList_processed)
+
 #writing csv to save wrangled data as a csv in processed folder 
-write.csv(SW_FacilityList_select, row.names = FALSE, file = "Z:/ENV872/ENV872-SeylerHyyppa_Final/Data/Processed/SW_FacilityList_processed.csv")
+write.csv(SW_FacilityList_processed, row.names = FALSE, file = "Z:/ENV872/ENV872-SeylerHyyppa_Final/Data/Processed/SW_FacilityList_processed.csv")
 
 ```
 
@@ -130,8 +140,11 @@ counties_sf_svi <- counties_sf %>%
 counties_sf_svi_SW_join <- counties_sf_svi %>% 
   left_join(SW_FacilityList_processed, by = c("NAME" = "County"))
 
+
 #writing csv to save wrangled data as a csv in processed folder 
 write.csv(counties_sf_svi_SW_join, row.names = FALSE, file = "Z:/ENV872/ENV872-SeylerHyyppa_Final/Data/Processed/SVI_SW_sf_processed.csv")
+
+read.csv("Z:/ENV872/ENV872-SeylerHyyppa_Final/Data/Processed/SVI_SW_sf_processed.csv")
 
 ```
 
