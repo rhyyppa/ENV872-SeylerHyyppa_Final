@@ -86,15 +86,15 @@ landfill.sites <- read.csv("../ENV872-SeylerHyyppa_Final/Data/Processed/SW_Facil
 head(landfill.sites)
 
 #Convert to a spatial dataframe
-landfill.sf <- landfill.sites %>% 
-  st_as_sf(coords = c('longitude','latitude'),
+CD_landfill_sf <- SW_FacilityList_CD_complete %>% 
+  st_as_sf(coords = c('long','lat'),
            crs=4326)
 
 # view using ggplot
-ggplot(data = landfill.sf) + geom_sf()
+ggplot(data = CD_landfill_sf) + geom_sf()
 
 #View using mapview
-mapview(landfill.sf)
+mapview(CD_landfill_sf)
 
 ```
 
