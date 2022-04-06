@@ -3,6 +3,8 @@ title: "SeylerHyyppa_FinalProject_dataexploration"
 author: "Meghan Seyler"
 date: "4/3/2022"
 output: html_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r include=FALSE, warning = FALSE}
@@ -17,10 +19,31 @@ library(mapview)
 library(RColorBrewer)
 library(dplyr)
 library(knitr)
+library(ggplot2)
 ```
 
 # 3 Exploratory Analysis
 (Rubric: flow between text and visualization is cohesive & relevant exploratory information is visualized)
+
+mapview resource https://r-spatial.github.io/mapview/articles/articles/mapview_02-advanced.html
+
+```{r explore counties data}
+#
+colnames(counties_sf)
+
+#
+st_crs(counties_sf) 
+
+#
+nrow(counties_sf)
+
+#Reveal the extent of this dataset via the st_bbox() function
+st_bbox(counties_sf)
+
+#View the data
+head(counties_sf)
+```
+
 
 ```{r explore svi data}
 #select columns of interest from SVI data
@@ -47,54 +70,84 @@ svi2018_nc_processed<-svi2018_nc_raw%>%
   add_column(Percent_POV = povdividedbytotal_col)%>%
   add_column(Percent_MINRTY = minrtydividedbytotal_col)
 
-
 svi2018_nc_poverty_top10 <- svi2018_nc_processed %>%
     group_by(COUNTY) %>%
     top_n(10, Percent_POV)
     
-sort(svi2018_nc_poverty_top10$Percent_POV, decreasing)
+svi2018_nc_poverty_top10 <- svi2018_nc_processed %>%
+    arrange(desc(Percent_POV))%>%
+    slice(1:10)%>%
+    relocate(Percent_POV, .before = FIPS)
 
 svi2018_nc_minrty_top10 <- svi2018_nc_processed %>%
-    group_by(COUNTY) %>%
-    top_n(10, Percent_MINRTY)
+    arrange(desc(Percent_MINRTY))%>%
+    slice(1:10)%>%
+   relocate(Percent_MINRTY, .before = FIPS)
 
 ```
 
-```{r}
-knitr::kable(head(svi2018_nc_poverty_top10[,7]), 
+```{r summary of top MINRTY and POV counties}
+knitr::kable(head(svi2018_nc_poverty_top10[1:10,1:2]), 
              "simple", 
-             round(2),
-             col.names = c("Poverty Percentage"),
+             col.names = c("County","Poverty Percentage"),
              align = 'c',
-             caption = "Summary Statistics of Rate of Poverty by County in North Carolina 2018"
+             caption = "The Ten Counties with the Highest Poverty Percentage in North Carolina"
 )
 
-knitr::kable(head(svi2018_nc_minority_summary[,1:5]), 
+knitr::kable(head(svi2018_nc_minrty_top10[1:10,1:2]), 
              "simple", 
-             round(2),
-             col.names = c("Lakename", "Mean", "Minimum","Maximum","Standard Deviation"), 
+             col.names = c("County","Minority Percentage"),
              align = 'c',
-             caption = "Summary Statistics of Minority by County in North Carolina 2018"
+             caption = "The Ten Counties with the Highest Percentage of Minority Populations in North Carolina"
 ) 
 ```
 
+```{r exploration plots}
+poverty_plot<- minority_plot<-svi2018_nc_processed%>%
+  arrange(Percent_POV)%>%
+  mutate(COUNTY=factor(COUNTY, COUNTY))%>%
+    ggplot(aes(x=COUNTY, y=Percent_POV)) +
+      geom_point(color="lightgreen") + 
+      geom_segment( aes(x=COUNTY, xend=COUNTY, y=0, yend=Percent_POV))+
+      coord_flip()+
+      ggtitle("Percentage of Poverty by County in North Carolina")
+      xlab("County Name")+
+      ylab("Poverty Population Percentage")+
+      ggsubtitle("By Reino Hyyppa and Meghan Seyler")
+      theme_minimal()
+      theme(
+        panel.grid.major.y = element_blank(),
+        panel.border = element_blank(),
+        axis.ticks.y = element_blank(),
+  )
 
-```{r analyze data}
+poverty_plot
 
-landfill.sites <- read.csv("../ENV872-SeylerHyyppa_Final/Data/Processed/SW_Facility_Processed.csv", stringsAsFactors = TRUE)
-
-head(landfill.sites)
-
-#Convert to a spatial dataframe
-CD_landfill_sf <- SW_FacilityList_CD_complete %>% 
-  st_as_sf(coords = c('long','lat'),
-           crs=4326)
-
-# view using ggplot
-ggplot(data = CD_landfill_sf) + geom_sf()
-
-#View using mapview
-mapview(CD_landfill_sf)
+minority_plot<-svi2018_nc_processed%>%
+  arrange(Percent_MINRTY)%>%
+  mutate(COUNTY=factor(COUNTY, COUNTY))%>%
+    ggplot(aes(x=COUNTY, y=Percent_MINRTY)) +
+      geom_point(color="69b3a2") + 
+      geom_segment( aes(x=COUNTY, xend=COUNTY, y=0, yend=Percent_MINRTY))+
+      coord_flip()+
+      ggtitle("Percentage of Minority Populations by County in North Carolina")
+      xlab("County Name")+
+      ylab("Minority Population Percentage")+
+      theme_minimal()
+      theme(
+        panel.grid.major.y = element_blank(),
+        panel.border = element_blank(),
+        axis.ticks.y = element_blank(),
+        plot.subtitle = element_text("By Reino Hyyppa and Meghan Seyler"),
+  )
+      
+minority_plot
 
 ```
+
+
+
+
+
+
 

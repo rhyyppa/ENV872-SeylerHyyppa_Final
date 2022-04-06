@@ -3,10 +3,59 @@ title: "SeylerHyyppa_FinalProject_dataanalysis"
 author: "Meghan Seyler"
 date: "4/3/2022"
 output: html_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 # 4 Analysis 
 
+
+```{r analyze data}
+
+landfill_sites <- read.csv("../ENV872-SeylerHyyppa_Final/Data/Processed/SW_FacilityList_processed.csv", stringsAsFactors = TRUE)
+
+head(landfill_sites)
+dim(landfill_sites)
+
+#Convert to a spatial dataframe
+landfill_sites_sf <- landfill_sites %>% 
+  st_as_sf(coords = c('long','lat'),
+           crs=4326)
+
+# view using ggplot
+ggplot(data = landfill_sites_sf) + geom_sf()
+
+#View using mapview
+mapview(landfill_sites_sf)
+
+```
+
+
 # 5 Visualization
+```{r join.attributes.to.spatial features}
+
+#View minortiy and poverty counts with mapview
+mapview(counties_sf_svi_processed, 
+        zcol = 'E_POV', 
+        col.regions = brewer.pal(2, 'RdBu')) + 
+  mapview(landfill_sites_sf)
+
+mapview(counties_sf_svi_processed, 
+        zcol = 'E_MINRTY', 
+        col.regions = brewer.pal(2, 'RdBu')) + 
+  mapview(landfill_sites_sf)
+
+#view minority and poverty percentages with mapview
+mapview(counties_sf_svi_processed, 
+        zcol = 'Percent_POV', 
+        col.regions = brewer.pal(2, 'RdBu')) + 
+  mapview(landfill_sites_sf)
+
+mapview(counties_sf_svi_processed, 
+        zcol = 'Percent_MINRTY', 
+        col.regions = brewer.pal(2, 'RdBu')) + 
+  mapview(landfill_sites_sf)
+
+```
 
 # 6 Summary and Conclusions

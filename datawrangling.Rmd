@@ -52,6 +52,11 @@ CDC Social Vulnerability | Contains estimates of poverty and minority data by co
 USA Counties Shape File | Spatial data frame that will establish the map of NC. | US Census   https://www.census.gov/geographies/mapping-files/time-series/geo/carto-boundary-file.html
 
 ## 2.2 Wrangling Process
+SVI Variable Name | Variable Description |
+-------------     | ---------------------| 
+E_TOTPOP          | Population estimate,2014-2018 ACS
+E_POV             | Persons below poverty estimate,2014-2018 ACS      
+E_MINRTY          | Minority (all persons except white, non-Hispanic)estimate,2014-2018 ACS
 
 ```{r include=FALSE, warning = FALSE}
 #examine working directory
@@ -75,7 +80,7 @@ library(dplyr)
 ```
 
 
-```{r data.loading.wrangling warning=FALSE}
+```{r data.loading.wrangling, warning=FALSE}
 # read in landfill location raw data filter by waste type 'CD'
 SW_FacilityList_CD <- read.csv("./Data/Raw/SW_FacilityList_actual.csv", stringsAsFactors = TRUE) %>%
   filter(Waste_Type == 'CD')
@@ -97,6 +102,9 @@ svi2018_nc_raw <- read.csv(
   'https://svi.cdc.gov/Documents/Data/2018_SVI_Data/CSV/States_Counties/NorthCarolina_COUNTY.csv',
   colClasses = c('FIPS' = 'factor')) %>% 
   select(COUNTY, FIPS, LOCATION, E_TOTPOP, E_POV, E_MINRTY)
+
+##check structure
+str(svi2018_nc_raw)
 
 #Read in USA counties shapefile and filter for NC - stateFP 37
 counties_sf<- st_read('./Data/Spatial/cb_2018_us_county_20m.shp') %>% 
@@ -134,19 +142,17 @@ write.csv(SW_FacilityList_processed, row.names = FALSE, file = "Z:/ENV872/ENV872
 
 
 ```{r joining.dataframes}
-#join counties sf and svi dataframe
+#Join the SVI attributes to the county spatial features
 counties_sf_svi <- counties_sf %>% 
   left_join(svi2018_nc_raw, by = c("GEOID" = "FIPS"))
 
-#join counties sf/svi dataframe with processed SW_Facility data
-counties_sf_svi_SW_join <- counties_sf_svi %>% 
-  left_join(SW_FacilityList_processed, by = c("NAME" = "County"))
+#Join the SVI_prcessed attributes to the county spatial features
+counties_sf_svi_processed <- counties_sf %>% 
+  left_join(svi2018_nc_processed, by = c("GEOID" = "FIPS"))
 
-
-#writing csv to save wrangled data as a csv in processed folder 
-write.csv(counties_sf_svi_SW_join, row.names = FALSE, file = "Z:/ENV872/ENV872-SeylerHyyppa_Final/Data/Processed/SVI_SW_sf_processed.csv")
-
-read.csv("Z:/ENV872/ENV872-SeylerHyyppa_Final/Data/Processed/SVI_SW_sf_processed.csv")
+#Read our landfill points into a spatial dataframe, transform the datasets to use UTM 17 N, WGS84
+SW_FacilityList_sf <- read_csv('Z:/ENV872/ENV872-SeylerHyyppa_Final/Data/Processed/SW_FacilityList_processed.csv') %>% 
+  st_as_sf(coords = c('long','lat'), crs=32617)
 
 ```
 
