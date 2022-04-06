@@ -3,6 +3,8 @@ title: "SeylerHyyppa_FinalProject_datawrangling"
 author: "Reino Hyyppa & Meghan Seyler"
 date: "3/31/2022"
 output: html_document
+editor_options: 
+  chunk_output_type: console
 ---
 Reminders for knitting commands in code chunks - can delete when we're done
 
@@ -146,7 +148,7 @@ write.csv(SW_FacilityList_processed, row.names = FALSE, file = "Z:/ENV872/ENV872
 counties_sf_svi <- counties_sf %>% 
   left_join(svi2018_nc_raw, by = c("GEOID" = "FIPS"))
 
-#Join the SVI_prcessed attributes to the county spatial features
+#Join the SVI_processed attributes to the county spatial features
 counties_sf_svi_processed <- counties_sf %>% 
   left_join(svi2018_nc_processed, by = c("GEOID" = "FIPS"))
 

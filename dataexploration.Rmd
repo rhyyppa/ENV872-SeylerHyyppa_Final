@@ -69,10 +69,6 @@ minrtydividedbytotal_col<-(svi2018_nc_raw$E_MINRTY/svi2018_nc_raw$E_TOTPOP)*100
 svi2018_nc_processed<-svi2018_nc_raw%>%
   add_column(Percent_POV = povdividedbytotal_col)%>%
   add_column(Percent_MINRTY = minrtydividedbytotal_col)
-
-svi2018_nc_poverty_top10 <- svi2018_nc_processed %>%
-    group_by(COUNTY) %>%
-    top_n(10, Percent_POV)
     
 svi2018_nc_poverty_top10 <- svi2018_nc_processed %>%
     arrange(desc(Percent_POV))%>%
@@ -113,8 +109,7 @@ poverty_plot<- minority_plot<-svi2018_nc_processed%>%
       ggtitle("Percentage of Poverty by County in North Carolina")
       xlab("County Name")+
       ylab("Poverty Population Percentage")+
-      ggsubtitle("By Reino Hyyppa and Meghan Seyler")
-      theme_minimal()
+      theme_minimal()+
       theme(
         panel.grid.major.y = element_blank(),
         panel.border = element_blank(),
@@ -133,7 +128,7 @@ minority_plot<-svi2018_nc_processed%>%
       ggtitle("Percentage of Minority Populations by County in North Carolina")
       xlab("County Name")+
       ylab("Minority Population Percentage")+
-      theme_minimal()
+      theme_minimal()+
       theme(
         panel.grid.major.y = element_blank(),
         panel.border = element_blank(),
