@@ -56,6 +56,13 @@ mapview(counties_sf_svi_processed,
         col.regions = brewer.pal(2, 'RdBu')) + 
   mapview(landfill_sites_sf)
 
+st_intersects(counties_sf_svi_processed, landfill_sites_sf)
 ```
 
 # 6 Summary and Conclusions
+
+
+To Do: 
+# Shorten name of counties_sf_svi_processed
+# change size of landfill bubbles
+# st_intersects() to return list of 
