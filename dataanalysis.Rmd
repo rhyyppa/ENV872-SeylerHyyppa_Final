@@ -34,14 +34,14 @@ mapview(landfill_sites_sf)
 
 
 # 5 Visualization
-```{r join.attributes.to.spatial features}
+```{r join.attributes.to.spatial features county level}
 
 #View minortiy and poverty counts with mapview
 mapview(counties_sf_svi_processed, 
         zcol = 'E_POV', 
         col.regions = brewer.pal(2, 'RdBu')) + 
   mapview(landfill_sites_sf, cex = 3, col.regions="green")
-?mapview()
+
 mapview(counties_sf_svi_processed, 
         zcol = 'E_MINRTY', 
         col.regions = brewer.pal(2, 'RdBu')) + 
@@ -57,6 +57,35 @@ mapview(counties_sf_svi_processed,
         zcol = 'Percent_MINRTY', 
         col.regions = brewer.pal(2, 'RdBu')) + 
   mapview(landfill_sites_sf, cex = 3, col.regions="green")
+
+```
+
+```{r join.attributes.to.spatial features tract level}
+
+
+#View minortiy and poverty counts with mapview
+mapview(svi2018_nc_tract_st, 
+        zcol = 'E_POV', 
+        col.regions = brewer.pal(2, 'RdBu')) + 
+  mapview(landfill_sites_sf, cex = 3, col.regions="green")
+
+mapview(svi2018_nc_tract_st, 
+        zcol = 'E_MINRTY', 
+        col.regions = brewer.pal(2, 'RdBu')) + 
+  mapview(landfill_sites_sf, cex = 3, col.regions="green")
+
+#view minority and poverty percentages with mapview
+mapview(svi2018_nc_tract_st, 
+        zcol = 'Percent_POV', 
+        col.regions = brewer.pal(2, 'RdBu')) + 
+  mapview(landfill_sites_sf, cex = 3, col.regions="green")
+
+mapview(svi2018_nc_tract_st, 
+        zcol = 'Percent_MINRTY', 
+        col.regions = brewer.pal(2, 'RdBu')) + 
+  mapview(landfill_sites_sf, cex = 3, col.regions="green")
+
+
 
 ```
 
