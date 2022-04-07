@@ -28,7 +28,11 @@ library(ggplot2)
 mapview resource https://r-spatial.github.io/mapview/articles/articles/mapview_02-advanced.html
 
 ```{r explore counties data}
-#
+#Read in USA counties shapefile and filter for NC - stateFP 37
+counties_sf<- st_read('./Data/Spatial/cb_2018_us_county_20m.shp') %>% 
+  filter(STATEFP == 37) 
+
+
 colnames(counties_sf)
 
 #
@@ -98,19 +102,20 @@ knitr::kable(head(svi2018_nc_minrty_top10[1:10,1:2]),
 ) 
 ```
 
-```{r exploration plots}
-poverty_plot<- minority_plot<-svi2018_nc_processed%>%
+```{r exploration plots, fig.cap = "By Meghan Seyler and Reino Hyyppa"}
+poverty_plot<-svi2018_nc_processed%>%
   arrange(Percent_POV)%>%
   mutate(COUNTY=factor(COUNTY, COUNTY))%>%
     ggplot(aes(x=COUNTY, y=Percent_POV)) +
       geom_point(color="lightgreen") + 
       geom_segment( aes(x=COUNTY, xend=COUNTY, y=0, yend=Percent_POV))+
       coord_flip()+
-      ggtitle("Percentage of Poverty by County in North Carolina")
+      ggtitle("Percentage of Poverty by County in North Carolina") +
       xlab("County Name")+
       ylab("Poverty Population Percentage")+
       theme_minimal()+
       theme(
+        axis.text = element_text(size = 5, face='bold') ,
         panel.grid.major.y = element_blank(),
         panel.border = element_blank(),
         axis.ticks.y = element_blank(),
@@ -125,11 +130,12 @@ minority_plot<-svi2018_nc_processed%>%
       geom_point(color="69b3a2") + 
       geom_segment( aes(x=COUNTY, xend=COUNTY, y=0, yend=Percent_MINRTY))+
       coord_flip()+
-      ggtitle("Percentage of Minority Populations by County in North Carolina")
+      ggtitle("Percentage of Minority Populations by County in North Carolina") +
       xlab("County Name")+
       ylab("Minority Population Percentage")+
       theme_minimal()+
       theme(
+        axis.text = element_text(size = 5, face='bold'),
         panel.grid.major.y = element_blank(),
         panel.border = element_blank(),
         axis.ticks.y = element_blank(),
@@ -137,6 +143,8 @@ minority_plot<-svi2018_nc_processed%>%
   )
       
 minority_plot
+
+
 
 ```
 
