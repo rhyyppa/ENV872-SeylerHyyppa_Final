@@ -22,6 +22,8 @@ landfill_sites_sf <- landfill_sites %>%
   st_as_sf(coords = c('long','lat'),
            crs=4326)
 
+landfill_sf_utm <- st_transform(landfill_sites_sf, crs = 26917)
+
 # view using ggplot
 ggplot(data = landfill_sites_sf) + geom_sf()
 
@@ -38,25 +40,57 @@ mapview(landfill_sites_sf)
 mapview(counties_sf_svi_processed, 
         zcol = 'E_POV', 
         col.regions = brewer.pal(2, 'RdBu')) + 
-  mapview(landfill_sites_sf)
-
+  mapview(landfill_sites_sf, cex = 3, col.regions="green")
+?mapview()
 mapview(counties_sf_svi_processed, 
         zcol = 'E_MINRTY', 
         col.regions = brewer.pal(2, 'RdBu')) + 
-  mapview(landfill_sites_sf)
+  mapview(landfill_sites_sf, cex = 3, col.regions="green")
 
 #view minority and poverty percentages with mapview
 mapview(counties_sf_svi_processed, 
         zcol = 'Percent_POV', 
         col.regions = brewer.pal(2, 'RdBu')) + 
-  mapview(landfill_sites_sf)
+  mapview(landfill_sites_sf, cex = 3, col.regions="green")
 
 mapview(counties_sf_svi_processed, 
         zcol = 'Percent_MINRTY', 
         col.regions = brewer.pal(2, 'RdBu')) + 
-  mapview(landfill_sites_sf)
+  mapview(landfill_sites_sf, cex = 3, col.regions="green")
 
-st_intersects(counties_sf_svi_processed, landfill_sites_sf)
+```
+
+```{r spatial overlap analysis}
+
+#Convert to UTM Zone 17 (crs = 26917)
+counties_sf_utm <- st_transform(counties_sf_svi_processed, crs = 26917)
+
+#Start building a map object
+myMap = mapview(counties_sf_utm, 
+                col.regions = 'yellow', 
+                alpha.regions = 0.2,
+                map.types = "CartoDB.Positron",
+                legend = FALSE)
+#Show the map
+myMap
+
+mapview(counties_sf_utm)
+
+#Select intersecting counties using the `filter()` command
+counties_intersect_2 <- counties_sf_utm %>% 
+  filter(st_intersects(x = ., y = landfill_sf_utm, sparse = TRUE))
+
+#View the result
+myMap + mapview(counties_intersect_2, alpha.regions = 0)
+
+#Actually intersect the counties (not just select those that intersect)
+neuse_counties_sf <- neuse_sf %>% 
+  st_intersection(counties_sf_utm)
+myMap + mapview(neuse_counties_sf, alpha.regions = 0)
+
+# testing alternative intersection approach 
+intersection.test <- st_intersection(counties_sf_utm, landfill_sf_utm, sparse=FALSE)
+mapview(intersection.test)
 ```
 
 # 6 Summary and Conclusions
