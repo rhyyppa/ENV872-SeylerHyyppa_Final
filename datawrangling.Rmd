@@ -108,7 +108,7 @@ svi2018_nc_raw <- read.csv(
 #import tract level svi data and change FIPS from character to factor 
 svi2018_nc_tract_st <-st_read('./Data/Spatial/NorthCarolinaTract/SVI2018_NORTHCAROLINA_tract.shp')
 svi2018_nc_tract_st$FIPS<-as.factor(svi2018_nc_tract_st$FIPS)
-
+  
 mapview(svi2018_nc_tract_st)
 
 ##check structure

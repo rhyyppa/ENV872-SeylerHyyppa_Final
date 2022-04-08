@@ -65,7 +65,7 @@ colnames(svi2018_nc_raw)
 #investigate what location column includes
 glimpse(svi2018_nc_raw$LOCATION)
 
-#total poverty and minority statistics by county
+#create percent poverty and minority values by county
 povdividedbytotal_col<-(svi2018_nc_raw$E_POV/svi2018_nc_raw$E_TOTPOP)*100
 
 minrtydividedbytotal_col<-(svi2018_nc_raw$E_MINRTY/svi2018_nc_raw$E_TOTPOP)*100
@@ -73,7 +73,7 @@ minrtydividedbytotal_col<-(svi2018_nc_raw$E_MINRTY/svi2018_nc_raw$E_TOTPOP)*100
 svi2018_nc_processed<-svi2018_nc_raw%>%
   add_column(Percent_POV = povdividedbytotal_col)%>%
   add_column(Percent_MINRTY = minrtydividedbytotal_col)
-    
+
 svi2018_nc_poverty_top10 <- svi2018_nc_processed %>%
     arrange(desc(Percent_POV))%>%
     slice(1:10)%>%
@@ -84,7 +84,30 @@ svi2018_nc_minrty_top10 <- svi2018_nc_processed %>%
     slice(1:10)%>%
    relocate(Percent_MINRTY, .before = FIPS)
 
+#create percent poverty and minority values by tract
+povdividedbytotal_tract_col<-(svi2018_nc_tract_st$E_POV/svi2018_nc_tract_st$E_TOTPOP)*100
+
+minrtydividedbytotal_tract_col<-(svi2018_nc_tract_st$E_MINRTY/svi2018_nc_tract_st$E_TOTPOP)*100
+
+svi2018_nc_tract_st<-svi2018_nc_tract_st%>%
+  add_column(Percent_POV = povdividedbytotal_tract_col)%>%
+  add_column(Percent_MINRTY = minrtydividedbytotal_tract_col)
+
+svi2018_nc_tract_st<-svi2018_nc_tract_st%>%
+  select(COUNTY, FIPS, LOCATION, E_TOTPOP, E_POV, E_MINRTY,Percent_POV,Percent_MINRTY)
+
+svi2018_nc_tract_st_top10 <- svi2018_nc_tract_st %>%
+    arrange(desc(Percent_POV))%>%
+    slice(1:10)%>%
+    relocate(Percent_POV, .before = FIPS)
+
+svi2018_nc_tract_st_top10 <- svi2018_nc_tract_st %>%
+    arrange(desc(Percent_MINRTY))%>%
+    slice(1:10)%>%
+   relocate(Percent_MINRTY, .before = FIPS)
+
 ```
+
 
 ```{r summary of top MINRTY and POV counties}
 knitr::kable(head(svi2018_nc_poverty_top10[1:10,1:2]), 
