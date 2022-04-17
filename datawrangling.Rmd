@@ -144,7 +144,7 @@ SW_FacilityList_processed <- SW_FacilityList_complete %>%
 dim(SW_FacilityList_processed)
 
 #writing csv to save wrangled data as a csv in processed folder 
-write.csv(SW_FacilityList_processed, row.names = FALSE, file = "Z:/ENV872/ENV872-SeylerHyyppa_Final/Data/Processed/SW_FacilityList_processed.csv")
+write.csv(SW_FacilityList_processed, row.names = FALSE, file = "./Data/Processed/SW_FacilityList_processed.csv")
 
 ```
 
@@ -159,7 +159,7 @@ counties_sf_svi_processed <- counties_sf %>%
   left_join(svi2018_nc_processed, by = c("GEOID" = "FIPS"))
 
 #Read our landfill points into a spatial dataframe, transform the datasets to use UTM 17 N, WGS84
-SW_FacilityList_sf <- read_csv('Z:/ENV872/ENV872-SeylerHyyppa_Final/Data/Processed/SW_FacilityList_processed.csv') %>% 
+SW_FacilityList_sf <- read_csv('./Data/Processed/SW_FacilityList_processed.csv') %>% 
   st_as_sf(coords = c('long','lat'), crs=32617)
 
 ```

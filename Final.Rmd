@@ -147,18 +147,40 @@ svi2018_nc_raw <- read.csv(
 
 
 
-# 3 Exploratory Analysis
+** 3 Exploratory Analysis
 (Rubric: flow between text and visualization is cohesive & relevant exploratory information is visualized)
 
-```{r explore svi data}
+Once the two data sets had been processed and converted into a spatial data frame, we conducted an exploratory analysis of our data visually using maps to display counties and census tracts, as well as construction and demolition landfill locations for the state of North Carolina. We used both the 'ggplot' and 'mapview' packages to visualize this data.
+
+```{r fig.cap = Map of North Carolina Counties}
+counties_sf<- st_read('./Data/Spatial/cb_2018_us_county_20m.shp') %>% 
+  filter(STATEFP == 37) 
+
+mapview(counties_sf)
+
+```
+
+```{r fig.cap= Map of North Cnesus Tracts, echo=F}
+
+mapview(svi2018_nc_tract_st)
+
+```
+
+
+Additionally, we calculated the percentage of poverty and low-income households in each county to analyze the distribution of this data for the state of North Carolina. We did this by dividing the total population by the number of low-income or minority households in each county. Then we created a chart of the top 10 counties ranked by rates of poverty and minority. We performed the same exploratory analysis on census tracts for a more localized and higher-resolution understanding of how this data is distributed across North Carolina. 
+
+
+
+
+```{r explore svi data, include=FALSE}
 #check structure
-str(svi2018_nc_raw)
+#str(svi2018_nc_raw)
 
 #check colnames
-colnames(svi2018_nc_raw)
+#colnames(svi2018_nc_raw)
 
 #investigate what location column includes
-glimpse(svi2018_nc_raw$LOCATION)
+#glimpse(svi2018_nc_raw$LOCATION)
 
 #create percent poverty and minority values by county to explore which county's have the highest percentage minority and poverty populations 
 povdividedbytotal_col<-(svi2018_nc_raw$E_POV/svi2018_nc_raw$E_TOTPOP)*100
@@ -174,6 +196,8 @@ svi2018_nc_poverty_top10 <- svi2018_nc_processed %>%
     arrange(desc(Percent_POV))%>%
     slice(1:10)%>%
     relocate(Percent_POV, .before = FIPS)
+
+view(svi2018_nc_poverty_top10)
 
 svi2018_nc_minrty_top10 <- svi2018_nc_processed %>%
     arrange(desc(Percent_MINRTY))%>%
@@ -206,14 +230,16 @@ svi2018_nc_tract_st_top10 <- svi2018_nc_tract_st %>%
 ```
 
 
-```{r summary of top MINRTY and POV counties}
+```{r fig.cap= Table of Top 10 Counties Ranked by Percent Poverty}
 knitr::kable(head(svi2018_nc_poverty_top10[1:10,1:2]), 
              "simple", 
              col.names = c("County","Poverty Percentage"),
              align = 'c',
              caption = "Counties by Highest Poverty Percentage in North Carolina"
 )
+```
 
+```{r fig.cap= Table of Top 10 Counties Ranked by Percent Minority}
 knitr::kable(head(svi2018_nc_minrty_top10[1:10,1:2]), 
              "simple", 
              col.names = c("County","Minority Percentage"),

@@ -51,7 +51,7 @@ head(counties_sf)
 ```
 
 
-```{r explore svi data counties}
+```{r explore svi data counties, include=FALSE}
 #select columns of interest from SVI data
 svi2018_nc_raw <- read.csv(
   'https://svi.cdc.gov/Documents/Data/2018_SVI_Data/CSV/States_Counties/NorthCarolina_COUNTY.csv',

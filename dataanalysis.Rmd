@@ -93,30 +93,38 @@ mapview(svi2018_nc_tract_st,
 #Convert to UTM Zone 17 (crs = 26917)
 svi2018_tract_utm <- st_transform(svi2018_nc_tract_st, crs = 26917)
 
+# identify census tract centroids using st_centroid function
 tract_centroids <- st_centroid(svi2018_tract_utm)
 mapview(tract_centroids) 
 
+# install packages for nearest neighbor calculation
 #install.packages('nngeo')
 library(nngeo)
 
+# identify nearest landfill to each tract centroid and calculate distances
 landfill_nn <- st_nn(x=tract_centroids, y=landfill_sf_utm, returnDist = TRUE, k = 1) %>% 
   set_names("Site", "Distance") %>% 
   map_df(., unlist)
 
-
+# combine centroid-landfill distances with SVI data set 
 svi2018_nc_tract_st <- cbind(svi2018_nc_tract_st, landfill_nn)
 
-# linear model 
-
+# linear model for low-income population and distance to landfill
 pov_regression <- lm(data = svi2018_nc_tract_st, Distance ~ Percent_POV)
 summary(pov_regression)
 
+
+# linear model for minority populations and distance to landfill 
 min_regression <- lm(data = svi2018_nc_tract_st, Distance ~ Percent_MINRTY)
 summary(min_regression)
 
 par(mfrow = c(2,2))
 plot(min_regression)
 par(mfrow = c(1,1))
+
+# now log transform the data
+min.regression2 <- lm(data = svi2018_nc_tract_st, log(Percent_MINRTY) ~ Distance)
+summary(irradiance.regression2)
 
 # Correlation
 cor.test(svi2018_nc_tract_st$Percent_MINRTY, svi2018_nc_tract_st$Distance)
