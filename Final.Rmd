@@ -1,7 +1,7 @@
 ---
 title: "EDA Final Report Spring 2022"
-author: "Reino Hyyppa Meghan Seyler"
-date: "4/9/2022"
+author: "Reino Hyyppa & Meghan Seyler"
+date: "4/19/2022"
 output: pdf_document
 ---
 
@@ -27,24 +27,46 @@ water contamination.This project aims to identify which populations live closest
 to construction and demolition landfills in North Carolina and therefore which 
 populations stand to benefit the most from waste diversion in the construction 
 industry. The focus on the construction industry was inspired by one of the 
-group member's master's project which is focused on circularity and waste 
+group member's masters project which is focused on circularity and waste 
 diversion in the construction industry. 
 
 
 ## 1.2 Research Question
 Are construction and demolition landfills in North Carolina disproportionately  
-more common in low income counties and/or counties with high minority  
-populations?
+located in counties with high minority and/or low income populations? 
+
+Are construction and demolition landfills in North Carolina disproportionately  
+located in census tracts with high minority and/or low income populations?  
 
 ## 1.3 Rational for Data 
+To investigate the research question we used three data sets: 
 
-####### what's the difference between this and section 2?
+1. North Carolina Department of Environmental Quality Site Waste Facility data.  
+This data set contains the addresses of each of the construction and 
+demolition landfills in North Carolina. We chose this data set so that we could 
+geocode the addresses into coordinates and map the landfills. 
+
+2. CDC Social Vulnerability 2014-2018 data. This data set gave us the total  
+population of each county and census tract as well as the number of minority   
+residents and residents below the poverty line per county and per tract.  
+Additionally, this data set was chosen because this data set has both location,  
+via FIPS code, and SVI data it could be used to create a heat map of poverty and 
+minority data by county. 
+
+3. USA Counties Shape File from U.S. Census. This data set was chosen because it  
+is the spatial dataframe needed to establish the map of North Carolina using the 
+mapview function. 
+
 
 # 2 Dataset Information 
 
 ## 2.1 Source and Content of Data
 
-########does this also count as table with dataset structure? Meghan askin John on 4/1
+The source and general description of each data set are outlined in Table 1  
+below. The variables of interest for each data set our outlined in Table 2 and 3.  
+The variables in bold are variables that we created during the wrangling process.
+
+**TABLE 1: Data set Description and Sources**
 
 Dataset Names | Relevant Information | Source |
 ------------- | ---------------------| -----
@@ -52,12 +74,36 @@ Site Waste Facility  | Lists all landfills in NC and includes landfill type and 
 CDC Social Vulnerability | Contains estimates of poverty and minority data by county. | Agency for Toxic Substances and Disease Registry https://www.atsdr.cdc.gov/placeandhealth/svi/documentation/SVI_documentation_2018.html
 USA Counties Shape File | Spatial data frame that will establish the map of NC. | US Census   https://www.census.gov/geographies/mapping-files/time-series/geo/carto-boundary-file.html
 
-## 2.2 Wrangling Process
+**TABLE2: Relevant SVI Data Variables**
 SVI Variable Name | Variable Description | Units
--------------     | ---------------------| 
-E_TOTPOP          | Population estimate,2014-2018 ACS | Count
-E_POV             | Persons below poverty estimate,2014-2018 ACS | Count      
-E_MINRTY          | Minority (all persons except white, non-Hispanic)estimate,2014-2018 ACS | Count
+-------|--------------|-------|
+E_TOTPOP  | Population estimate,2014-2018 ACS | Count
+E_POV     | Persons below poverty estimate,2014-2018 ACS | Count      
+E_MINRTY  | Minority estimate (all persons except white,non-Hispanic),2014-2018 ACS | Count
+**POV_Percent**   | **(E_POV/E_TOTPOP)x100** | **Percentage**
+**MINRTY_Percent**| **(E_MINRTY/E_TOTPOP)x100** | **Percentage**   
+
+**TABLE3: Relevant Site Waste Facility Variables**
+Landfill Location Variable Name | Variable Description 
+-------|--------------|
+Address3 | Landfill street name and area code 
+City    | City name 
+State     | State acronym  
+**lat**       | **Landfill latitude** 
+**long** | **Landfill longitude**
+
+######### For processed data only: add table with dataset dimensions etc.This would be a table of column names and the data types, eg numeric, character,etc. Could be included with a list of mean values, missing data counts, etc
+
+## 2.2 Wrangling Process
+
+1. North Carolina Department of Environmental Quality Site Waste Facility data.  
+    + Filter for only construction and demolition landfills 
+    + use geocode function to turn addresses into latitude and longitude 
+    + identify sites with N/As and inocorrect coordinates 
+    + manually make an excel sheet with the pesky addresses and coordinates
+    + merge the the original data set with the manually generate data set 
+    
+2. 
 
 ```{r include=FALSE, warning = FALSE}
 #examine working directory
@@ -105,8 +151,6 @@ svi2018_nc_raw <- read.csv(
 (Rubric: flow between text and visualization is cohesive & relevant exploratory information is visualized)
 
 ```{r explore svi data}
-
-
 #check structure
 str(svi2018_nc_raw)
 
@@ -136,7 +180,7 @@ svi2018_nc_minrty_top10 <- svi2018_nc_processed %>%
     slice(1:10)%>%
    relocate(Percent_MINRTY, .before = FIPS)
 
-#create percent poverty and minority values by county to explore which tracts have the highest minority and poverty populations by percentage 
+#create percent poverty and minority values by tract to explore which tracts have the highest minority and poverty populations by percentage 
 
 povdividedbytotal_tract_col<-(svi2018_nc_tract_st$E_POV/svi2018_nc_tract_st$E_TOTPOP)*100
 

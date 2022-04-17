@@ -2,8 +2,10 @@
 title: "SeylerHyyppa_FinalProject_dataexploration"
 author: "Meghan Seyler"
 date: "4/3/2022"
-output: html_document
-editor_options: 
+output:
+  pdf_document: default
+  html_document: default
+editor_options:
   chunk_output_type: console
 ---
 

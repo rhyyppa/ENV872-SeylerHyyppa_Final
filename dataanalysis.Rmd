@@ -56,11 +56,7 @@ mapview(counties_sf_svi_processed,
 mapview(counties_sf_svi_processed, 
         zcol = 'Percent_MINRTY', 
         col.regions = brewer.pal(2, 'RdBu')) + 
-  mapview(landfill_sites_sf, cex = 3, col.regions="green")+
-  mapview(svi2018_nc_tract_st,
-          zcol = 'Percent_POV', 
-          col.regions = brewer.pal(2, 'RdBu')
-          )
+  mapview(landfill_sites_sf, cex = 3, col.regions="green")
 
 ```
 
