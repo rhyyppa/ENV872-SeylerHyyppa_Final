@@ -164,14 +164,7 @@ SW_FacilityList_sf <- read_csv('Z:/ENV872/ENV872-SeylerHyyppa_Final/Data/Process
 
 ```
 
-```{r}
-wind_raw <- read.csv('https://raw.githubusercontent.com/ENV859/EnviroAtlasData/main/Wind_Energy.csv',
-  colClasses = c('HUC_12' = 'factor')) %>%  
-  mutate(HUC_8 = substr(HUC_12,1,8))
 
-huc8_sf.subset <- st_read('./Data/Spatial/NCHUC8.shp')
-
-```
 
 
 

@@ -62,7 +62,6 @@ mapview(counties_sf_svi_processed,
 
 ```{r join.attributes.to.spatial features tract level}
 
-
 #View minortiy and poverty counts with mapview
 mapview(svi2018_nc_tract_st, 
         zcol = 'E_POV', 
@@ -92,34 +91,40 @@ mapview(svi2018_nc_tract_st,
 ```{r spatial overlap analysis}
 
 #Convert to UTM Zone 17 (crs = 26917)
-counties_sf_utm <- st_transform(counties_sf_svi_processed, crs = 26917)
+svi2018_tract_utm <- st_transform(svi2018_nc_tract_st, crs = 26917)
 
-#Start building a map object
-myMap = mapview(counties_sf_utm, 
-                col.regions = 'yellow', 
-                alpha.regions = 0.2,
-                map.types = "CartoDB.Positron",
-                legend = FALSE)
-#Show the map
-myMap
+tract_centroids <- st_centroid(svi2018_tract_utm)
+mapview(tract_centroids) 
 
-mapview(counties_sf_utm)
+#install.packages('nngeo')
+library(nngeo)
 
-#Select intersecting counties using the `filter()` command
-counties_intersect_2 <- counties_sf_utm %>% 
-  filter(st_intersects(x = ., y = landfill_sf_utm, sparse = TRUE))
+landfill_nn <- st_nn(x=tract_centroids, y=landfill_sf_utm, returnDist = TRUE, k = 1) %>% 
+  set_names("Site", "Distance") %>% 
+  map_df(., unlist)
 
-#View the result
-myMap + mapview(counties_intersect_2, alpha.regions = 0)
 
-#Actually intersect the counties (not just select those that intersect)
-neuse_counties_sf <- neuse_sf %>% 
-  st_intersection(counties_sf_utm)
-myMap + mapview(neuse_counties_sf, alpha.regions = 0)
+svi2018_nc_tract_st <- cbind(svi2018_nc_tract_st, landfill_nn)
 
-# testing alternative intersection approach 
-intersection.test <- st_intersection(counties_sf_utm, landfill_sf_utm, sparse=FALSE)
-mapview(intersection.test)
+# linear model 
+
+pov_regression <- lm(data = svi2018_nc_tract_st, Distance ~ Percent_POV)
+summary(pov_regression)
+
+min_regression <- lm(data = svi2018_nc_tract_st, Distance ~ Percent_MINRTY)
+summary(min_regression)
+
+par(mfrow = c(2,2))
+plot(min_regression)
+par(mfrow = c(1,1))
+
+# Correlation
+cor.test(svi2018_nc_tract_st$Percent_MINRTY, svi2018_nc_tract_st$Distance)
+
+
+cor.test(svi2018_nc_tract_st$Percent_POV, svi2018_nc_tract_st$Distance)
+
+
 ```
 
 # 6 Summary and Conclusions
