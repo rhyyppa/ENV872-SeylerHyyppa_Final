@@ -155,8 +155,6 @@ ggplot(svi2018_nc_tract_st, aes(Percent_MINRTY, Percent_POV, size = Distance)) +
   geom_point(alpha = 0.5)
 ```
 
-
-
 # 6 Summary and Conclusions
 
 

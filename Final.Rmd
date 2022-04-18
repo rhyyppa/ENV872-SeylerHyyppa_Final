@@ -450,6 +450,8 @@ There is evidence that the proximity to the nearest construction and demolition 
 
 There is also a significant relationship between the proximity to the nearest landfill and the percentage of minority population for each census tract (r^2 = 0.03, p-value < 2.2e-16). The coefficient for percentage minority population is -125.57, which in context means that for every 1% increase in minority population, the distance from the census tract centroid to the nearest landfill decreases by 125.57 meters. There was not a significant relationship between landfill proximity ad percentage of low-income population for North Carolina (p-value = 0.1921).  
 
+# 6 Summary and Conclusion
+
 
 
 
