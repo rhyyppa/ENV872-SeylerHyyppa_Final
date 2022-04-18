@@ -88,7 +88,7 @@ mapview(svi2018_nc_tract_st,
 
 ```
 
-```{r spatial overlap analysis}
+```{r linear model}
 
 #Convert to UTM Zone 17 (crs = 26917)
 svi2018_tract_utm <- st_transform(svi2018_nc_tract_st, crs = 26917)
@@ -115,25 +115,40 @@ summary(pov_regression)
 
 
 # linear model for minority populations and distance to landfill 
-min_regression <- lm(data = svi2018_nc_tract_st, Distance ~ Percent_MINRTY)
+min_regression <- lm(data = svi2018_nc_tract_st, Percent_MINRTY ~ Distance)
 summary(min_regression)
 
 par(mfrow = c(2,2))
 plot(min_regression)
+
 par(mfrow = c(1,1))
 
-# now log transform the data
-min.regression2 <- lm(data = svi2018_nc_tract_st, log(Percent_MINRTY) ~ Distance)
-summary(irradiance.regression2)
+svi2018_nc_tract_st <- 
+  mutate(svi2018_nc_tract_st, log_min = log(svi2018_nc_tract_st$Percent_MINRTY),
+         svi2018_nc_tract_st, log_pov = log(svi2018_nc_tract_st$Percent_POV))
+
+svi2018_nc_tract_st <- na.omit(svi2018_nc_tract_st) 
+?lm()
+min_regression <- lm(data = svi2018_nc_tract_st, Distance ~ log_min)
+summary(min_regression)
+
+ggplot()
 
 # Correlation
 cor.test(svi2018_nc_tract_st$Percent_MINRTY, svi2018_nc_tract_st$Distance)
 
 
 cor.test(svi2018_nc_tract_st$Percent_POV, svi2018_nc_tract_st$Distance)
-
-
 ```
+
+```{r plot data}
+
+ggplot(svi2018_nc_tract_st, aes(Percent_MINRTY, Percent_POV, size = Distance, color = COUNTY)) +
+  geom_point(alpha = 0.5)
+?geom_point()
+```
+
+
 
 # 6 Summary and Conclusions
 

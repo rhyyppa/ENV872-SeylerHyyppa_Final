@@ -146,11 +146,10 @@ svi2018_nc_raw <- read.csv(
 ```
 
 
-
-** 3 Exploratory Analysis
+# 3 Exploratory Analysis
 (Rubric: flow between text and visualization is cohesive & relevant exploratory information is visualized)
 
-Once the two data sets had been processed and converted into a spatial data frame, we conducted an exploratory analysis of our data visually using maps to display counties and census tracts, as well as construction and demolition landfill locations for the state of North Carolina. We used both the 'ggplot' and 'mapview' packages to visualize this data.
+Once the two data sets had been processed and converted into a spatial data frame, we conducted an exploratory analysis of our data visually using maps to display counties and census tracts for the state of North Carolina. We also created a map displaying the locations of construction and demolition landfills in North Carolina. Maps and visual analysis of the data was performed using 'ggplot' and the 'mapview' package.
 
 ```{r fig.cap = Map of North Carolina Counties}
 counties_sf<- st_read('./Data/Spatial/cb_2018_us_county_20m.shp') %>% 
@@ -167,10 +166,7 @@ mapview(svi2018_nc_tract_st)
 ```
 
 
-Additionally, we calculated the percentage of poverty and low-income households in each county to analyze the distribution of this data for the state of North Carolina. We did this by dividing the total population by the number of low-income or minority households in each county. Then we created a chart of the top 10 counties ranked by rates of poverty and minority. We performed the same exploratory analysis on census tracts for a more localized and higher-resolution understanding of how this data is distributed across North Carolina. 
-
-
-
+Additionally, we calculated the rate of minority and poverty in each county as a percent of total population to analyze the distribution of this data across North Carolina. We did this by dividing the total population by the number of low-income or minority households in each county. Then we created a chart of the top 10 counties ranked by rates of poverty and minority. We performed the same exploratory analysis on census tracts to provide a more localized and higher-resolution analysis of how this data is distributed across the state. Based on our calculations Robeson county, located in the southern part of the state, had the highest poverty and minority rates for North Carolina. 
 
 ```{r explore svi data, include=FALSE}
 #check structure
@@ -248,6 +244,9 @@ knitr::kable(head(svi2018_nc_minrty_top10[1:10,1:2]),
 ) 
 ```
 
+Finally, we created two separate lollipop plots using the 'ggplot' package to visualize and explore the relationship between counties and poverty and minority populations as a percent of total population for each county. 
+
+
 ```{r exploration plots, fig.cap = "By Meghan Seyler and Reino Hyyppa"}
 poverty_plot<-svi2018_nc_processed%>%
   arrange(Percent_POV)%>%
@@ -287,9 +286,17 @@ minority_plot<-svi2018_nc_processed%>%
         axis.ticks.y = element_blank(),
         plot.subtitle = element_text("By Reino Hyyppa and Meghan Seyler"),
   )
-      
 minority_plot
-
-
-
 ```
+
+
+# 4 Analysis
+
+## 4.1 Q1: Are construction and demolition landfills in North Carolina disproportionately located in counties with high minority and/or low income populations? 
+
+We conducted a visual analysis of the relationship between 
+
+
+Are construction and demolition landfills in North Carolina disproportionately  
+located in census tracts with high minority and/or low income populations?
+
