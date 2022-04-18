@@ -2,7 +2,9 @@
 title: "EDA Final Report Spring 2022"
 author: "Reino Hyyppa & Meghan Seyler"
 date: "4/19/2022"
-output: pdf_document
+output:
+  html_document:
+    df_print: paged
 ---
 
 Reminders for knitting commands in code chunks - can delete when we're done
@@ -31,12 +33,14 @@ group member's masters project which is focused on circularity and waste
 diversion in the construction industry. 
 
 
-## 1.2 Research Question
-Are construction and demolition landfills in North Carolina disproportionately  
+## 1.2 Research Questions
+Question 1: Are construction and demolition landfills in North Carolina disproportionately  
 located in counties with high minority and/or low income populations? 
 
-Are construction and demolition landfills in North Carolina disproportionately  
-located in census tracts with high minority and/or low income populations?  
+Question 2: Are construction and demolition landfills in North Carolina disproportionately  
+located in census tracts with high minority and/or low income populations?
+
+Question 3: Is there significant differences in the distance to construction and demolition landfills among census tracts with high minority and/or low income populations? 
 
 ## 1.3 Rational for Data 
 To investigate the research question we used three data sets: 
@@ -151,7 +155,7 @@ svi2018_nc_raw <- read.csv(
 
 Once the two data sets had been processed and converted into a spatial data frame, we conducted an exploratory analysis of our data visually using maps to display counties and census tracts for the state of North Carolina. We also created a map displaying the locations of construction and demolition landfills in North Carolina. Maps and visual analysis of the data was performed using 'ggplot' and the 'mapview' package.
 
-```{r fig.cap = Map of North Carolina Counties}
+```{r county map, fig.cap = "Map of North Carolina Counties", echo=FALSE}
 counties_sf<- st_read('./Data/Spatial/cb_2018_us_county_20m.shp') %>% 
   filter(STATEFP == 37) 
 
@@ -159,7 +163,7 @@ mapview(counties_sf)
 
 ```
 
-```{r fig.cap= Map of North Cnesus Tracts, echo=F}
+```{r tract map, fig.cap= "Map of North Carolina Census Tracts", echo=FALSE}
 
 mapview(svi2018_nc_tract_st)
 
@@ -168,7 +172,7 @@ mapview(svi2018_nc_tract_st)
 
 Additionally, we calculated the rate of minority and poverty in each county as a percent of total population to analyze the distribution of this data across North Carolina. We did this by dividing the total population by the number of low-income or minority households in each county. Then we created a chart of the top 10 counties ranked by rates of poverty and minority. We performed the same exploratory analysis on census tracts to provide a more localized and higher-resolution analysis of how this data is distributed across the state. Based on our calculations Robeson county, located in the southern part of the state, had the highest poverty and minority rates for North Carolina. 
 
-```{r explore svi data, include=FALSE}
+```{r explore svi data, include=FALSE, echo=FALSE}
 #check structure
 #str(svi2018_nc_raw)
 
@@ -226,7 +230,7 @@ svi2018_nc_tract_st_top10 <- svi2018_nc_tract_st %>%
 ```
 
 
-```{r fig.cap= Table of Top 10 Counties Ranked by Percent Poverty}
+```{r table 1, fig.cap= "Table of Top 10 Counties Ranked by Percent Poverty"}
 knitr::kable(head(svi2018_nc_poverty_top10[1:10,1:2]), 
              "simple", 
              col.names = c("County","Poverty Percentage"),
@@ -235,7 +239,7 @@ knitr::kable(head(svi2018_nc_poverty_top10[1:10,1:2]),
 )
 ```
 
-```{r fig.cap= Table of Top 10 Counties Ranked by Percent Minority}
+```{r table 2,  fig.cap= "Table of Top 10 Counties Ranked by Percent Minority"}
 knitr::kable(head(svi2018_nc_minrty_top10[1:10,1:2]), 
              "simple", 
              col.names = c("County","Minority Percentage"),
@@ -244,10 +248,10 @@ knitr::kable(head(svi2018_nc_minrty_top10[1:10,1:2]),
 ) 
 ```
 
-Finally, we created two separate lollipop plots using the 'ggplot' package to visualize and explore the relationship between counties and percentages of both poverty and minority in North Carolina. 
+We also created two separate lollipop plots using the 'ggplot' package to visualize and explore the relationship between counties and percentages of both poverty and low-income populations for North Carolina. 
 
 
-```{r exploration plots, fig.cap = Pecentage of Poverty by County}
+```{r exploration plots, fig.cap = "Pecentage of Poverty by County"}
 poverty_plot<-svi2018_nc_processed%>%
   arrange(Percent_POV)%>%
   mutate(COUNTY=factor(COUNTY, COUNTY))%>%
@@ -269,7 +273,7 @@ poverty_plot<-svi2018_nc_processed%>%
 poverty_plot
 ```
 
-```{r fig.cap = Percent of Minority by County}
+```{r minority lolliplot plot, fig.cap = "Percent of Minority by County"}
 minority_plot<-svi2018_nc_processed%>%
   arrange(Percent_MINRTY)%>%
   mutate(COUNTY=factor(COUNTY, COUNTY))%>%
@@ -291,14 +295,15 @@ minority_plot<-svi2018_nc_processed%>%
 minority_plot
 ```
 
+Finally, we wanted to determine the nearest construction and demolition landfill to each census tracts and calculate the distances between each point. First, using the st_centroid function in the 'sf' package in r we were able to locate the centroid of each county tract. Next, we used the st_nn function in the 'nngeo' package to identify the nearest landfill to each centroid and calculate the distance between each point using the euclidean distance method. In the next section, we will use these distance measurements to explore the relationship between construction and demolition landfills and percentages of minority and low income populations for each census tract in North Carolina. 
 
 # 4 Analysis
 
 ## 4.1 Q1: Are construction and demolition landfills in North Carolina disproportionately located in counties with high minority and/or low income populations? 
 
-First, we conducted a visual analysis to understand the relationship between construction and demolition landfills and counties with high rates of low-income populations in North Carolina. Using the 'mapview' package we created a heatmap to represent low-income populations graphically (Figure ). Counties with high rates of low-income populations are shaded blue, while counties with low rates of low-income populations are colored red. Next, we overlaid the heatmap of low-income populations with the map of construction and demolition landfills in North Carolina to visualize their relationship. 
+First, we conducted a visual analysis to understand the relationship between construction and demolition landfills and counties with high rates of low-income populations in North Carolina. Using the 'mapview' package we created a heatmap to represent low-income populations graphically (Figure ). Counties with high rates of low-income populations are shaded blue, while counties with low rates of low-income populations are colored red. Next, we joined the heat map of percetage for each county with the map of construction and demolition landfills in North Carolina to visualize their relationship. 
 
-```{r join.attributes.to.spatial features county level}
+```{r county level, fig.cap = "Heat Map of Percentage Poverty by Counties and C&D Landfill Sites"}
 
 #View minortiy and poverty counts with mapview
 #mapview(counties_sf_svi_processed, 
@@ -320,7 +325,7 @@ mapview(counties_sf_svi_processed,
 
 Additionally, we performed a visual analysis to examine the relationship between construction and demolition landfills and counties with high rates of minority populations using a heat map (Figure ). Counties with high rates of minority populations are colored blue, and counties with low rates of minority populations are shaded red. 
 
-```{r fig.cap = Map of Low-Income Percentages and C&D Landfills for North Carolina}
+```{r poverty by county, fig.cap = "Heat Map of Percentage Minority by Counties and C&D Landfill Sites"}
 mapview(counties_sf_svi_processed, 
         zcol = 'Percent_MINRTY', 
         col.regions = brewer.pal(2, 'RdBu')) + 
@@ -330,5 +335,49 @@ mapview(counties_sf_svi_processed,
 
 # Q2: Are construction and demolition landfills in North Carolina disproportionately located in census tracts with high minority and/or low income populations?
 
-The next step of our analysis, was exploring the relationship between 
+The next step of our analysis, was exploring the relationship between construction and demolition landfills and social vulnerability data at the census tract level for North Carolina. Census tracts are a subdivision of counties and are comparable in size to one another, and therefore provide a more localized measure of the rates of low-income and minority populations. Using a similar approach to  our analysis of the relationship between construction and demolition landfills and counties with high rates of low-income and minority populations, we created heat maps of social vulnerability data for each census tract. 
+
+First, we created a map of the percentage of low-income population for each census tract using the 'mapview' package. We joined this map with the map of construction and demolition landfills to visualize the their relationship (Figure ). Census tracts with high rates of low-income population are colored and blue and census tracts with low rates of low-income population are shaded red.
+
+```{r poverty by census tract, fig.cap = "Heat Map of Percentage Poverty by Census Tract and C&D Landfill Sites"}
+#view minority and poverty percentages with mapview
+mapview(svi2018_nc_tract_st, 
+        zcol = 'Percent_POV', 
+        col.regions = brewer.pal(2, 'RdBu')) + 
+  mapview(landfill_sites_sf, cex = 3, col.regions="green", alpha = 1)
+
+```
+
+Next, we performed the same analysis to determine the relationship between construction and demolition landfills and census tracts with high rates of minority using a heat map. Again, census tracts with high rates of minority population are colored blue, and census tracts with low-minority percentages are shaded red. 
+```{r minority by census tract, fig.cap ="Heat Map of Percentage Minorityy by Census Tract and C&D Landfill Sites }
+mapview(svi2018_nc_tract_st, 
+        zcol = 'Percent_MINRTY', 
+        col.regions = brewer.pal(2, 'RdBu')) + 
+  mapview(landfill_sites_sf, cex = 3, col.regions="green")
+```
+
+# Q3: Is there significant differences in the distance to construction and demolition landfills among census tracts with high minority and/or low income populations? 
+
+In addition, we wanted to determine if there is a significant relationship between social vulnerability data for each census tract and the proximity to the nearest landfill. To do this we created both a linear model to examine the relationship between these variables, as well as a Kendall Non-parametric Correlation test. 
+
+First, we conducted a correlation test using the cor.test function in the 'stats' package in r to test the relationship between social vulnerability data for each census tract and their distances to the nearest landfill. We used the Kendall Correlation test for non-parametric data since the the measure of social vulnerability was ordinal data using percentages and does not follow a normal distribution. We performed the Kendall Correlation test on both poverty and minority data to determine the relationship between census tracts and their proximity to the nearest landfill.
+
+Finally, we analyzed the relationship between census tracts and their proximity to landfills using the lm function in the 'stats' package. We used the distance between each census tract centroid and the nearest landfill as the dependent variable and social vulnerability characteristics (percentage of poverty and low-income population for each census tract) as the independent variables. 
+
+# 4 Visualization
+
+To visualize the relationship between both percentages of minority and low-income populations and their proximity to the nearest landfill for each census tract we create a bubble plot using the 'ggplot' package (Figure ). In the figure below, we graphed the percentage low-income population for each census tract on the y-axis and the percentage minority population on the y-axis. Each point on the plot is sized by the distance from each census tract to the nearest landfill.  
+
+```{r plot data, fig.cap = "Percentage of Low-income vs. Minority Population for North Carolina}
+ggplot(svi2018_nc_tract_st, aes(Percent_MINRTY, Percent_POV, size = Distance)) +
+  geom_point(alpha = 0.5)
+```
+
+# 5 Results
+
+# Q3: Is there significant differences in the distance to construction and demolition landfills among census tracts with high minority and/or low income populations? 
+
+
+
+
 

@@ -83,15 +83,13 @@ mapview(svi2018_nc_tract_st,
         zcol = 'Percent_MINRTY', 
         col.regions = brewer.pal(2, 'RdBu')) + 
   mapview(landfill_sites_sf, cex = 3, col.regions="green")
-
-
-
 ```
 
 ```{r linear model}
 
 #Convert to UTM Zone 17 (crs = 26917)
 svi2018_tract_utm <- st_transform(svi2018_nc_tract_st, crs = 26917)
+landfill_utm <- st_transform(landfill_sites_sf, crs = 26917)
 
 # identify census tract centroids using st_centroid function
 tract_centroids <- st_centroid(svi2018_tract_utm)
@@ -101,8 +99,8 @@ mapview(tract_centroids)
 #install.packages('nngeo')
 library(nngeo)
 
-# identify nearest landfill to each tract centroid and calculate distances
-landfill_nn <- st_nn(x=tract_centroids, y=landfill_sf_utm, returnDist = TRUE, k = 1) %>% 
+# identify nearest landfill to each tract centroid and calculate distance
+landfill_nn <- st_nn(x=tract_centroids, y=landfill_utm, returnDist = TRUE, k = 1) %>% 
   set_names("Site", "Distance") %>% 
   map_df(., unlist)
 
@@ -115,37 +113,46 @@ summary(pov_regression)
 
 
 # linear model for minority populations and distance to landfill 
-min_regression <- lm(data = svi2018_nc_tract_st, Percent_MINRTY ~ Distance)
+min_regression <- lm(data = svi2018_nc_tract_st, Distance ~ Percent_MINRTY)
 summary(min_regression)
 
-par(mfrow = c(2,2))
+# check diagnostic plots
+par(mfrow = c(1,1))
 plot(min_regression)
 
-par(mfrow = c(1,1))
+# remove outlier (interestingly all the outliers are from the same county)
+inx.o <- c(342, 341, 340, 339, 338, 337)
+m2_out <- with(svi2018_nc_tract_st[-inx.o, ], lm(Distance~Percent_MINRTY))
 
+# removing outliers did not meet the assumptions of the model
+par(mfrow=c(1,1))
+plot(m2_out)
+
+# log transform social vulnerability data
 svi2018_nc_tract_st <- 
   mutate(svi2018_nc_tract_st, log_min = log(svi2018_nc_tract_st$Percent_MINRTY),
          svi2018_nc_tract_st, log_pov = log(svi2018_nc_tract_st$Percent_POV))
 
-svi2018_nc_tract_st <- na.omit(svi2018_nc_tract_st) 
-?lm()
-min_regression <- lm(data = svi2018_nc_tract_st, Distance ~ log_min)
+# run linear model on log transformed minority data
+logMin_regression <- lm(data = svi2018_nc_tract_st, Distance ~ log_min)
 summary(min_regression)
 
-ggplot()
+# try to remove any NAs
+svi2018_nc_tract_st <- na.omit(svi2018_nc_tract_st) 
 
-# Correlation
-cor.test(svi2018_nc_tract_st$Percent_MINRTY, svi2018_nc_tract_st$Distance)
+# rerun the model
 
+logMin_regression2 <- lm(data = svi2018_nc_tract_st, Distance ~ log_min)
+summary(logMin_regression2)
 
-cor.test(svi2018_nc_tract_st$Percent_POV, svi2018_nc_tract_st$Distance)
+# Test for correlation using the Kendall Rank correlation test
+cor.test(svi2018_nc_tract_st$Percent_MINRTY, svi2018_nc_tract_st$Distance, method = "kendall")
+cor.test(svi2018_nc_tract_st$Percent_POV, svi2018_nc_tract_st$Distance, method = "kendall")
 ```
 
 ```{r plot data}
-
-ggplot(svi2018_nc_tract_st, aes(Percent_MINRTY, Percent_POV, size = Distance, color = COUNTY)) +
+ggplot(svi2018_nc_tract_st, aes(Percent_MINRTY, Percent_POV, size = Distance)) +
   geom_point(alpha = 0.5)
-?geom_point()
 ```
 
 
