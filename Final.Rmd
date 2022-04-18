@@ -364,6 +364,71 @@ First, we conducted a correlation test using the cor.test function in the 'stats
 
 Finally, we analyzed the relationship between census tracts and their proximity to landfills using the lm function in the 'stats' package. We used the distance between each census tract centroid and the nearest landfill as the dependent variable and social vulnerability characteristics (percentage of poverty and low-income population for each census tract) as the independent variables. 
 
+```{r linear model, echo=FALSE, include=FALSE}
+
+#Convert to UTM Zone 17 (crs = 26917)
+svi2018_tract_utm <- st_transform(svi2018_nc_tract_st, crs = 26917)
+landfill_utm <- st_transform(landfill_sites_sf, crs = 26917)
+
+# identify census tract centroids using st_centroid function
+tract_centroids <- st_centroid(svi2018_tract_utm)
+mapview(tract_centroids) 
+
+# install packages for nearest neighbor calculation
+#install.packages('nngeo')
+library(nngeo)
+
+# identify nearest landfill to each tract centroid and calculate distance
+landfill_nn <- st_nn(x=tract_centroids, y=landfill_utm, returnDist = TRUE, k = 1) %>% 
+  set_names("Site", "Distance") %>% 
+  map_df(., unlist)
+
+# combine centroid-landfill distances with SVI data set 
+svi2018_nc_tract_st <- cbind(svi2018_nc_tract_st, landfill_nn)
+
+# linear model for low-income population and distance to landfill
+pov_regression <- lm(data = svi2018_nc_tract_st, Distance ~ Percent_POV)
+summary(pov_regression)
+
+
+# linear model for minority populations and distance to landfill 
+min_regression <- lm(data = svi2018_nc_tract_st, Distance ~ Percent_MINRTY)
+summary(min_regression)
+
+# check diagnostic plots
+par(mfrow = c(1,1))
+plot(min_regression)
+
+# remove outlier (interestingly all the outliers are from the same county)
+inx.o <- c(342, 341, 340, 339, 338, 337)
+m2_out <- with(svi2018_nc_tract_st[-inx.o, ], lm(Distance~Percent_MINRTY))
+
+# removing outliers did not meet the assumptions of the model
+par(mfrow=c(1,1))
+plot(m2_out)
+
+# log transform social vulnerability data
+svi2018_nc_tract_st <- 
+  mutate(svi2018_nc_tract_st, log_min = log(svi2018_nc_tract_st$Percent_MINRTY),
+         svi2018_nc_tract_st, log_pov = log(svi2018_nc_tract_st$Percent_POV))
+
+# run linear model on log transformed minority data
+logMin_regression <- lm(data = svi2018_nc_tract_st, Distance ~ log_min)
+summary(min_regression)
+
+# try to remove any NAs
+svi2018_nc_tract_st <- na.omit(svi2018_nc_tract_st) 
+
+# rerun the model
+
+logMin_regression2 <- lm(data = svi2018_nc_tract_st, Distance ~ log_min)
+summary(logMin_regression2)
+
+# Test for correlation using the Kendall Rank correlation test
+cor.test(svi2018_nc_tract_st$Percent_MINRTY, svi2018_nc_tract_st$Distance, method = "kendall")
+cor.test(svi2018_nc_tract_st$Percent_POV, svi2018_nc_tract_st$Distance, method = "kendall")
+```
+
 # 4 Visualization
 
 To visualize the relationship between both percentages of minority and low-income populations and their proximity to the nearest landfill for each census tract we create a bubble plot using the 'ggplot' package (Figure ). In the figure below, we graphed the percentage low-income population for each census tract on the y-axis and the percentage minority population on the y-axis. Each point on the plot is sized by the distance from each census tract to the nearest landfill.  
@@ -375,7 +440,15 @@ ggplot(svi2018_nc_tract_st, aes(Percent_MINRTY, Percent_POV, size = Distance)) +
 
 # 5 Results
 
-# Q3: Is there significant differences in the distance to construction and demolition landfills among census tracts with high minority and/or low income populations? 
+# 5.1 Q1: Are construction and demolition landfills in North Carolina disproportionately located in counties with high minority and/or low income populations? 
+
+# 5.2  Q2: Are construction and demolition landfills in North Carolina disproportionately located in census tracts with high minority and/or low income populations?
+
+# 5.3 Q3: Is there significant differences in the distance to construction and demolition landfills among census tracts with high minority and/or low income populations? 
+
+There is evidence that the proximity to the nearest construction and demolition landfill is correlated with the percentage of low-income and minority populations for each census tract. In particular, the Kendall Correlation test revealed that there is a significant inverse relationship between proximity to the nearest landfill and the percentage of minority population for each census tract (p-value < 2.2e-16, tau = -0.13). In addition, there is a significant positive correlation between the proximity to the nearest landfill and the percentage of low-income population in each census tract (p-value = 0.001, tau = 0.04649479). 
+
+There is also a significant relationship between the proximity to the nearest landfill and the percentage of minority population for each census tract (r^2 = 0.03, p-value < 2.2e-16). The coefficient for percentage minority population is -125.57, which in context means that for every 1% increase in minority population, the distance from the census tract centroid to the nearest landfill decreases by 125.57 meters. There was not a significant relationship between landfill proximity ad percentage of low-income population for North Carolina (p-value = 0.1921).  
 
 
 
