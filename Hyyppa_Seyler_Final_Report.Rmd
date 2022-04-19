@@ -1,0 +1,489 @@
+---
+title: "EDA Final Report Spring 2022"
+author: "Reino Hyyppa & Meghan Seyler"
+date: "4/19/2022"
+output:
+  html_document:
+    df_print: paged
+---
+Link to Github repository: https://github.com/rhyyppa/ENV872-SeylerHyyppa_Final.git
+
+# 1. Introduction 
+
+### 1.1 Context 
+
+Diverting waste from going to landfills comes with global benefits including a decrease in global warming potential (GWP). However, waste diversion stands to especially benefit those populations living closest to landfills by decreasing local green house gas emissions and other hazards such as odor, smoke, noise, and water contamination.This project aims to identify if impoverished and minority populations in North Carolina tend to live closer to construction and demolition landfills than wealthy, non-minority populations. If minority and/or impoverished populations live closer to construction and demolition landfills this study will highlight an inequity that must be addressed and it will help communicate these these already vulnerable members of society stand to benefit the most from waste diversion in the construction industry. The focus on the construction industry was inspired by one of the group member's masters project which is focused on circularity and waste diversion in the construction industry. 
+
+
+### 1.2 Research Questions
+**Question 1:** Are construction and demolition landfills in North Carolina disproportionately located in counties with high minority and/or low income populations? 
+
+**Question 2:** Are construction and demolition landfills in North Carolina disproportionately located in census tracts with high minority and/or low income populations?
+
+**Question 3:** Is there significant differences in the distance to construction and demolition landfills among census tracts with high minority and/or low income populations? 
+
+### 1.3 Rational for Data 
+To investigate the research question we used three data sets: 
+
+1. North Carolina Department of Environmental Quality Site Waste Facility data.  
+This data set contains the addresses of each of the construction and demolition landfills in North Carolina. We chose this data set so that we could geocode the addresses into coordinates and map the landfills. 
+
+2. CDC Social Vulnerability 2014-2018 data.  
+This data set gave us the total population of each county and census tract as well as the number of minority residents and residents below the poverty line per county and per tract. Additionally, this data set was chosen because this data set has both location, via FIPS code, and SVI data it could be used to create a heat map of poverty and minority data by county. 
+
+3. USA Counties Shape File from U.S. Census.  
+This data set was chosen because it is the spatial dataframe needed to establish the map of North Carolina using the mapview function. 
+
+
+# 2. Dataset Information 
+
+### 2.1 Source and Content of Data
+
+The source and general description of each data set are outlined in Table 1  
+below. The variables of interest for each data set our outlined in Table 2 and 3.  
+The variables in bold are variables that we created during the wrangling process.
+
+**TABLE 1: Data set Description and Sources**
+
+Dataset Names | Relevant Information | Source |
+------------- | ---------------------| -----
+Site Waste Facility  | Lists all landfills in NC and includes landfill type and address. | NC DEQ   https://deq.nc.gov/about/divisions/waste-management/solid-waste-section/solid-waste-facility-lists-presentations-and-annual-reports/solid-waste-facility-lists
+CDC Social Vulnerability | Contains estimates of poverty and minority data by county. | Agency for Toxic Substances and Disease Registry https://www.atsdr.cdc.gov/placeandhealth/svi/documentation/SVI_documentation_2018.html
+USA Counties Shape File | Spatial data frame that will establish the map of NC. | US Census   https://www.census.gov/geographies/mapping-files/time-series/geo/carto-boundary-file.html
+
+**TABLE2: Relevant SVI Data Variables**  
+*Data set dimensions: 2192 row x 10 columns*
+
+SVI Variable Name | Variable Description | Units |  
+----------------- | -------------------- | ------ |   
+E_TOTPOP | Population estimate,2014-2018 ACS | Count
+E_POV     | Persons below poverty estimate,2014-2018 ACS | Count      
+E_MINRTY  | Minority estimate (all persons except white,non-Hispanic),2014-2018 ACS | Count
+*POV_Percent*   | *(E_POV/E_TOTPOP)x100* | *Percentage*
+*MINRTY_Percent*| *(E_MINRTY/E_TOTPOP)x100* | *Percentage*   
+
+**TABLE3: Relevant Site Waste Facility Variables**  
+*Data set dimensions: 79 rows x 16 columns*
+
+Landfill Location Variable Name | Variable Description |  
+-------|------------------------|--------------------- |  
+Address3 | Landfill street name and area code 
+City  | City name 
+State | State acronym  
+*lat* | *Landfill latitude* 
+*long* | *Landfill longitude*
+
+
+
+
+
+### 2.2 Wrangling Process
+
+1. North Carolina Department of Environmental Quality Site Waste Facility data.  
+    + Filter for only construction and demolition landfills 
+    + use geocode function to turn addresses into latitude and longitude 
+    + identify sites with N/As and inocorrect coordinates 
+    + manually make an excel sheet with the pesky addresses and coordinates
+    + merge the the original data set with the manually generate data set 
+    
+2. CDC Social Vulnerability 2014-2018 data
+    +change FIPS to factor 
+    +add column for percent minority and percent poverty
+    +select only the columns necessary for data analysis
+    
+3. USA Counties Shape File from U.S. Census.
+  +Filter for NC by using stateFP code 37
+
+```{r include=FALSE, warning = FALSE, ehco=FALSE}
+#examine working directory
+getwd()
+
+#loading packages for spatial analysis 
+library(tidyverse)
+library(sf)
+library(leaflet)
+library(mapview)
+library(RColorBrewer)
+library(dplyr)
+library(lubridate)
+
+#loading packages for geocoding
+#install.packages("tidygeocoder")
+library(tidygeocoder)
+library(tibble)
+library(dplyr)
+
+#loading packages for exploratory analysis 
+library(knitr)
+library(ggplot2)
+
+```
+
+```{r counties shapefile data wrangling, include=FALSE, message=FALSE, warning=FALSE}
+#Read in USA counties shapefile and filter for NC - stateFP 37
+counties_sf<- st_read('./Data/Spatial/NorthCarolinaCounty/cb_2018_us_county_20m.shp') %>% 
+  filter(STATEFP == 37) 
+
+#writing csv to save wrangled data as a csv in processed folder 
+write.csv(counties_sf, row.names = FALSE, file = "./Data/Processed/counties_sf_processed.csv")
+```
+
+```{r site waste data wrangling, include=FALSE}
+#Read in NC site waste facility data and filter for construction & demolition (CD) waste type
+SW_FacilityList_CD <- read.csv("./Data/Raw/SW_FacilityList.csv", stringsAsFactors = TRUE) %>%
+  filter(Waste_Type == 'CD')
+
+#using site waste facility address to add latitude and longitude to sW_Facility_List_CD dataframe
+SW_FacilityList_CD_geo <- SW_FacilityList_CD %>%
+  geocode(street = Address3, city = City, state = Sate, method="census")
+
+# remove rows with NAs in the longitude and latitude
+SW_FacilityList_CD_complete <- na.omit(SW_FacilityList_CD_geo)
+
+# read in landfill location data with correct facility coordinates using google maps
+SW_Coordinates <- read.csv('./Data/Raw/CD_Facility_Coord.csv') %>%
+  select(County:long)
+
+# merge geocoded site waste facilities with site waste facility data found using google maps
+SW_FacilityList_complete <- rbind(SW_FacilityList_CD_complete, SW_Coordinates)
+
+#selecting columns we want to use for further analysis
+SW_FacilityList_processed <- SW_FacilityList_complete %>% 
+  select(County, Waste_Type, Permit_ID, Permit_Name, Address3, City, Zip, lat, long)
+
+#writing csv to save wrangled data as a csv in processed folder 
+write.csv(SW_FacilityList_processed, row.names = FALSE, file = "./Data/Processed/SW_FacilityList_processed.csv")
+
+
+#Read SW_FacilityList data into a spatial dataframe, transform the datasets to use UTM 17 N, WGS84
+landfill_sites <- read.csv("../ENV872-SeylerHyyppa_Final/Data/Processed/SW_FacilityList_processed.csv", stringsAsFactors = TRUE)
+
+head(landfill_sites)
+dim(landfill_sites)
+
+#Convert to a spatial dataframe
+landfill_sites_sf <- landfill_sites %>% 
+  st_as_sf(coords = c('long','lat'),
+           crs=4326)
+
+landfill_sf_utm <- st_transform(landfill_sites_sf, crs = 26917)
+```
+
+```{r SVI data wrangling, include = FALSE, warning=FALSE}
+#County level data: import and select columns of interest and change FIPS from character to factor
+svi2018_nc_raw <- read.csv(
+  'https://svi.cdc.gov/Documents/Data/2018_SVI_Data/CSV/States_Counties/NorthCarolina_COUNTY.csv',
+  colClasses = c('FIPS' = 'factor')) %>% 
+  select(COUNTY, FIPS, LOCATION, E_TOTPOP, E_POV, E_MINRTY)
+
+#Tract-level data: import and change FIPS from character to factor 
+svi2018_nc_tract_st <-st_read('./Data/Spatial/NorthCarolinaTract/SVI2018_NORTHCAROLINA_tract.shp')
+svi2018_nc_tract_st$FIPS<-as.factor(svi2018_nc_tract_st$FIPS)
+
+#create percent poverty and minority values by county
+povdividedbytotal_col<-(svi2018_nc_raw$E_POV/svi2018_nc_raw$E_TOTPOP)*100
+
+minrtydividedbytotal_col<-(svi2018_nc_raw$E_MINRTY/svi2018_nc_raw$E_TOTPOP)*100
+
+svi2018_nc_processed<-svi2018_nc_raw%>%
+  add_column(Percent_POV = povdividedbytotal_col)%>%
+  add_column(Percent_MINRTY = minrtydividedbytotal_col)
+
+#create percent poverty and minority values by tract
+povdividedbytotal_tract_col<-(svi2018_nc_tract_st$E_POV/svi2018_nc_tract_st$E_TOTPOP)*100
+
+minrtydividedbytotal_tract_col<-(svi2018_nc_tract_st$E_MINRTY/svi2018_nc_tract_st$E_TOTPOP)*100
+
+svi2018_nc_tract_st<-svi2018_nc_tract_st%>%
+  add_column(Percent_POV = povdividedbytotal_tract_col)%>%
+  add_column(Percent_MINRTY = minrtydividedbytotal_tract_col)
+
+
+#select columns needed for analysis
+svi2018_nc_tract_st<-svi2018_nc_tract_st%>%
+  select(COUNTY, FIPS, LOCATION, E_TOTPOP, E_POV, E_MINRTY,Percent_POV,Percent_MINRTY)
+
+#writing csv to save wrangled data as a csv in processed folder 
+write.csv(svi2018_nc_tract_st, row.names = FALSE, file = "./Data/Processed/svi2018_nc_tract_st_processed.csv")  
+```
+
+```{r join counties and svi data, include=FALSE}
+#Join the SVI attributes to the county spatial features
+counties_sf_svi <- counties_sf %>% 
+  left_join(svi2018_nc_raw, by = c("GEOID" = "FIPS"))
+
+#Join the SVI_processed attributes to the county spatial features
+counties_sf_svi_processed <- counties_sf %>% 
+  left_join(svi2018_nc_processed, by = c("GEOID" = "FIPS"))
+
+#Read our landfill points into a spatial dataframe, transform the datasets to use UTM 17 N, WGS84
+SW_FacilityList_sf <- read_csv('./Data/Processed/SW_FacilityList_processed.csv') %>% 
+  st_as_sf(coords = c('long','lat'), crs=32617)
+```
+
+# 3. Exploratory Analysis
+
+Once the two data sets had been processed and converted into a spatial data frame, we conducted an exploratory analysis of our data visually using maps to display counties and census tracts for the state of North Carolina. We also created a map displaying the locations of construction and demolition landfills in North Carolina. Maps and visual analysis of the data was performed using the 'mapview' function
+
+```{r county map, fig.cap = "Map of North Carolina Counties", echo=FALSE, warning=FALSE, message=FALSE}
+mapview(counties_sf)
+
+```
+
+```{r tract map, fig.cap= "Map of North Carolina Census Tracts", echo=FALSE, warning=FALSE, message=FALSE}
+
+mapview(svi2018_nc_tract_st)
+
+```
+
+```{r landfill locations, fig.cap ="NC Construction and Demolition Lanfill Sites"}
+mapview(landfill_sites_sf)
+
+```
+
+Additionally, we calculated the rate of minority and poverty in each county as a percent of total population to analyze the distribution of this data across North Carolina. We did this by dividing the total population by the number of low-income or minority households in each county. Then we created a chart of the top 10 counties ranked by rates of poverty and minority. We performed the same exploratory analysis on census tracts to provide a more localized and higher-resolution analysis of how this data is distributed across the state. Based on our calculations Robeson county, located in the southern part of the state, had the highest percentages of low-income and minority populations compared to other counties in North Carolina. 
+
+```{r explore svi data, include=FALSE, message=FALSE}
+#check structure
+#str(svi2018_nc_raw)
+
+#check colnames
+#colnames(svi2018_nc_raw)
+
+#investigate what location column includes
+#glimpse(svi2018_nc_raw$LOCATION)
+
+#create dataframe of counties with the highest minority and poverty populations by percentage
+
+svi2018_nc_poverty_top10 <- svi2018_nc_processed %>%
+    arrange(desc(Percent_POV))%>%
+    slice(1:10)%>%
+    relocate(Percent_POV, .before = FIPS)
+
+view(svi2018_nc_poverty_top10)
+
+svi2018_nc_minrty_top10 <- svi2018_nc_processed %>%
+    arrange(desc(Percent_MINRTY))%>%
+    slice(1:10)%>%
+   relocate(Percent_MINRTY, .before = FIPS)
+
+#create dataframe of tracts with the highest minority and poverty populations by percentage 
+
+svi2018_nc_tract_st_top10 <- svi2018_nc_tract_st %>%
+    arrange(desc(Percent_POV))%>%
+    slice(1:10)%>%
+    relocate(Percent_POV, .before = FIPS)
+
+svi2018_nc_tract_st_top10 <- svi2018_nc_tract_st %>%
+    arrange(desc(Percent_MINRTY))%>%
+    slice(1:10)%>%
+   relocate(Percent_MINRTY, .before = FIPS)
+
+```
+
+
+```{r table 1, fig.cap= "Table of Top 10 Counties Ranked by Percent Poverty", echo=FALSE}
+knitr::kable(head(svi2018_nc_poverty_top10[1:10,1:2]), 
+             "simple", 
+             col.names = c("County","Poverty Percentage"),
+             align = 'c',
+             caption = "Counties by Highest Poverty Percentage in North Carolina"
+)
+```
+
+```{r table 2,  fig.cap= "Table of Top 10 Counties Ranked by Percent Minority", echo=FALSE}
+knitr::kable(head(svi2018_nc_minrty_top10[1:10,1:2]), 
+             "simple", 
+             col.names = c("County","Minority Percentage"),
+             align = 'c',
+             caption = "Counties by Highest Percentage of Minority Populations in North Carolina"
+) 
+```
+
+We also created two separate lollipop plots using the 'ggplot' package to visualize and explore the relationship between counties and percentage of both minority and low-income populations for North Carolina. 
+
+
+```{r exploration plots, fig.cap = "Pecentage of Poverty by County", fig.height=9, echo=FALSE}
+poverty_plot<-svi2018_nc_processed%>%
+  arrange(Percent_POV)%>%
+  mutate(COUNTY=factor(COUNTY, COUNTY))%>%
+    ggplot(aes(x=COUNTY, y=Percent_POV)) +
+      geom_point(color="lightgreen") + 
+      geom_segment( aes(x=COUNTY, xend=COUNTY, y=0, yend=Percent_POV))+
+      coord_flip()+
+      ggtitle("Percentage of Poverty by County in North Carolina") +
+      xlab("County Name")+
+      ylab("Poverty Population Percentage")+
+      theme_minimal()+
+      theme(
+        axis.text = element_text(size = 6, face='bold') ,
+        panel.grid.major.y = element_blank(),
+        panel.border = element_blank(),
+        axis.ticks.y = element_blank(),
+  )
+
+poverty_plot
+```
+
+```{r minority lolliplot plot, fig.cap = "Percentage of Minority by County", fig.height=9, echo=FALSE}
+minority_plot<-svi2018_nc_processed%>%
+  arrange(Percent_MINRTY)%>%
+  mutate(COUNTY=factor(COUNTY, COUNTY))%>%
+    ggplot(aes(x=COUNTY, y=Percent_MINRTY)) +
+      geom_point(color="69b3a2") + 
+      geom_segment( aes(x=COUNTY, xend=COUNTY, y=0, yend=Percent_MINRTY))+
+      coord_flip()+
+      ggtitle("Percentage of Minority Populations by County in North Carolina") +
+      xlab("County Name")+
+      ylab("Minority Population Percentage")+
+      theme_minimal()+
+      theme(
+        axis.text = element_text(size = 6, face='bold'),
+        panel.grid.major.y = element_blank(),
+        panel.border = element_blank(),
+        axis.ticks.y = element_blank(),
+        plot.subtitle = element_text("By Reino Hyyppa and Meghan Seyler"),
+  )
+minority_plot
+```
+
+Finally, we wanted to determine the nearest construction and demolition landfill to each census tracts and calculate the distances between each point. First, using the st_centroid function in the 'sf' package in r we were able to locate the centroid of each county tract. Next, we used the st_nn function in the 'nngeo' package to identify the nearest landfill to each centroid and calculate the distance between each point using the euclidean distance method. In the next section, we will use these distance measurements to explore the relationship between construction and demolition landfills and percentages of minority and low income populations for each census tract in North Carolina. 
+
+# 4. Analysis
+
+### Question 1: Are construction and demolition landfills in North Carolina disproportionately located in counties with high minority and/or low income populations? 
+
+First, we conducted a visual analysis to understand the relationship between construction and demolition landfills and counties with high rates of low-income populations in North Carolina. Using the 'mapview' package we created a heatmap to represent low-income populations graphically. Counties with high rates of low-income populations are shaded blue, while counties with low rates of low-income populations are colored red. Next, we joined the heat map of percetage for each county with the map of construction and demolition landfills in North Carolina to visualize their relationship. 
+
+```{r county level, fig.cap = "Heat Map of Percentage Poverty by Counties and C&D Landfill Sites", echo=FALSE, warning=FALSE}
+
+#View minortiy and poverty counts with mapview
+#mapview(counties_sf_svi_processed, 
+        #zcol = 'E_POV', 
+       # col.regions = brewer.pal(2, 'RdBu')) + 
+  #mapview(landfill_sites_sf, cex = 3, col.regions="green")
+
+#mapview(counties_sf_svi_processed, 
+    #    zcol = 'E_MINRTY', 
+     #   col.regions = brewer.pal(2, 'RdBu')) + 
+ # mapview(landfill_sites_sf, cex = 3, col.regions="green")
+
+#view minority and poverty percentages by county with mapview
+mapview(counties_sf_svi_processed, 
+        zcol = 'Percent_POV', 
+        col.regions = brewer.pal(2, 'RdBu')) + 
+  mapview(landfill_sites_sf, cex = 3, col.regions="green")
+```
+
+Additionally, we performed a visual analysis to examine the relationship between construction and demolition landfills and counties with high rates of minority populations using a heat map. Counties with high rates of minority populations are colored blue, and counties with low rates of minority populations are shaded red. 
+
+```{r poverty by county, fig.cap = "Heat Map of Percentage Minority by Counties and C&D Landfill Sites", echo=FALSE, warning=FALSE}
+mapview(counties_sf_svi_processed, 
+        zcol = 'Percent_MINRTY', 
+        col.regions = brewer.pal(2, 'RdBu')) + 
+  mapview(landfill_sites_sf, cex = 3, col.regions="green")
+
+```
+
+### Question 2: Are construction and demolition landfills in North Carolina disproportionately located in census tracts with high minority and/or low income populations?
+
+The next step of our analysis, was exploring the relationship between construction and demolition landfills and social vulnerability data at the census tract level for North Carolina. Census tracts are a subdivision of counties and are comparable in size to one another, and therefore provide a more localized measure of the rates of low-income and minority populations. Using a similar approach to  our analysis of the relationship between construction and demolition landfills and counties with high rates of low-income and minority populations, we created heat maps of social vulnerability data for each census tract. 
+
+First, we created a map of the percentage of low-income population for each census tract using the 'mapview' package. We joined this map with the map of construction and demolition landfills to visualize the their relationship. Census tracts with high rates of low-income population are colored and blue and census tracts with low rates of low-income population are shaded red.
+
+```{r poverty by census tract, fig.cap = "Heat Map of Percentage Poverty by Census Tract and C&D Landfill Sites", echo=FALSE, warning=FALSE}
+#view minority and poverty percentages with mapview
+mapview(svi2018_nc_tract_st, 
+        zcol = 'Percent_POV', 
+        col.regions = brewer.pal(2, 'RdBu')) + 
+  mapview(landfill_sites_sf, cex = 3, col.regions="green", alpha = 1)
+
+```
+
+Next, we performed the same analysis to determine the relationship between construction and demolition landfills and census tracts with high rates of minority using a heat map. Again, census tracts with high rates of minority population are colored blue, and census tracts with low-minority percentages are shaded red. 
+```{r minority by census tract, fig.cap ="Heat Map of Percentage Minority by Census Tract and C&D Landfill Sites", echo=FALSE, warning=FALSE}
+mapview(svi2018_nc_tract_st, 
+        zcol = 'Percent_MINRTY', 
+        col.regions = brewer.pal(2, 'RdBu')) + 
+  mapview(landfill_sites_sf, cex = 3, col.regions="green")
+```
+
+### Question 3: Is there significant differences in the distance to construction and demolition landfills among census tracts with high minority and/or low income populations? 
+
+In addition, we wanted to determine if there is a significant relationship between social vulnerability data for each census tract and the proximity to the nearest landfill. To do this we created both a linear model to examine the relationship between these variables, as well as a Kendall Non-parametric Correlation test. 
+
+First, we conducted a correlation test using the cor.test function in the 'stats' package in r to test the relationship between social vulnerability data for each census tract and their distances to the nearest landfill. We used the Kendall Correlation test for non-parametric data since the the measure of social vulnerability was ordinal data using percentages and does not follow a normal distribution. We performed the Kendall Correlation test on both poverty and minority data to determine the relationship between census tracts and their proximity to the nearest landfill.
+
+Finally, we analyzed the relationship between census tracts and their proximity to landfills using the lm function in the 'stats' package. We used the distance between each census tract centroid and the nearest landfill as the dependent variable and social vulnerability characteristics (percentage of minority and low-income population for each census tract) as the independent variables. 
+
+```{r linear model, echo=FALSE, include=FALSE}
+
+#Convert to UTM Zone 17 (crs = 26917)
+svi2018_tract_utm <- st_transform(svi2018_nc_tract_st, crs = 26917)
+landfill_utm <- st_transform(landfill_sites_sf, crs = 26917)
+
+# identify census tract centroids using st_centroid function
+tract_centroids <- st_centroid(svi2018_tract_utm)
+mapview(tract_centroids) 
+
+# install packages for nearest neighbor calculation
+#install.packages('nngeo')
+library(nngeo)
+
+# identify nearest landfill to each tract centroid and calculate distance
+landfill_nn <- st_nn(x=tract_centroids, y=landfill_utm, returnDist = TRUE, k = 1) %>% 
+  set_names("Site", "Distance") %>% 
+  map_df(., unlist)
+
+# combine centroid-landfill distances with SVI data set 
+svi2018_nc_tract_st <- cbind(svi2018_nc_tract_st, landfill_nn)
+
+# linear model for low-income population and distance to landfill
+pov_regression <- lm(data = svi2018_nc_tract_st, Distance ~ Percent_POV)
+summary(pov_regression)
+
+# linear model for minority populations and distance to landfill 
+min_regression <- lm(data = svi2018_nc_tract_st, Distance ~ Percent_MINRTY)
+summary(min_regression)
+
+# check diagnostic plots
+par(mfrow = c(1,1))
+plot(min_regression)
+
+# remove outlier (interestingly all the outliers are from the same county)
+inx.o <- c(342, 341, 340, 339, 338, 337)
+m2_out <- with(svi2018_nc_tract_st[-inx.o, ], lm(Distance~Percent_MINRTY))
+
+# removing outliers did not meet the assumptions of the model
+par(mfrow=c(1,1))
+plot(m2_out)
+
+# Test for correlation using the Kendall Rank correlation test
+cor.test(svi2018_nc_tract_st$Percent_MINRTY, svi2018_nc_tract_st$Distance, method = "kendall")
+cor.test(svi2018_nc_tract_st$Percent_POV, svi2018_nc_tract_st$Distance, method = "kendall")
+```
+
+# 5. Results
+
+### Question 1: Are construction and demolition (CD) landfills in North Carolina disproportionately located in counties with high minority and/or low income populations? 
+
+From the county-level visual analysis it does not appear that income level is strongly correlated with CD landfill location. Only about 14 of the landfills are located in counties with a high rate of poverty. On the other hand, counties with high minority populations do appear to be more correlated with landfill location. 28 of the landfills are located in counties with a high percentage of minority populations.
+
+
+### Question 2: Are construction and demolition landfills in North Carolina disproportionately located in census tracts with high minority and/or low income populations?
+
+From the county-level visual analysis it does not appear that income level is strongly correlated with CD landfill location. Only about 14 of the landfills are located in counties with a high rate of poverty. On the other hand, counties with high minority populations do appear to be more correlated with landfill location. 28 of the landfills are located in counties with a high percentage of minority populations.
+
+### Question 3: Is there significant differences in the distance to construction and demolition landfills among census tracts with high minority and/or low income populations? 
+
+There is evidence that the proximity to the nearest construction and demolition landfill is correlated with the percentage of low-income and minority populations for each census tract. In particular, the Kendall Correlation test revealed that there is a significant inverse relationship between proximity to the nearest landfill and the percentage of minority population for each census tract (p-value < 2.2e-16, tau = -0.13). In addition, there is a significant positive correlation between the proximity to the nearest landfill and the percentage of low-income population in each census tract (p-value = 0.001, tau = 0.04649479). 
+
+There is also a significant relationship between the proximity to the nearest landfill and the percentage of minority population for each census tract (r^2 = 0.03, p-value < 2.2e-16). The coefficient for percentage minority population is -125.57, which in context means that for every 1% increase in minority population, the distance from the census tract centroid to the nearest landfill decreases by 125.57 meters. There was not a significant relationship between landfill proximity ad percentage of low-income population for North Carolina (p-value = 0.1921).  
+
+
+# 6. Summary and Future Directions
+
+Overall this analysis demonstrates that while there is a correlation between percentage minority and low-income population and distance to CD landfill location that there is a a only significant relationship between percentage minority and CD landfill proximity. These results could have waste management implications for both contractors and policy makers. First and foremost the results communicate the fact that minority populations are disproportionately carrying the burden of negative impacts from construction and demolition waste. Some of these impacts may include increased air pollution, burdensome noise and smells from landfill management, and water contamination. To address these burdens policy makers could support the development of waste diversion infrastructure such as coordinated hauling of similar waste streams to businesses that could recycle and reuse the materials. Additionally, contractors could use this information as an incentive to begin measuring their waste streams and quantifying the impacts they are having on the communities that are currently processing waste. 
+
+Future studies should investigate the relationship between **all** landfill locations and percent minority and poverty. This analysis would help communicate the need for increased waste diversion at the state level. Increased awareness of this correlation at the state level is essential because of the manner in which U.S. waste management is organized. The Resource Conservation and Recovery Act (p.L.94-580) gives the EPA and federal government the authority to deal with hazardous waste. The federal government classifies what is considered hazardous and anything non-hazardous gets measured at the state level. States then create their own laws and regulations on how to manage non-hazardous waste. These laws are then managed and enforced at the county or city level. This intermingled web of authority results in finger pointing when trying to place responsibility for the environmental justice implications of waste management. Therefore, a state wide analysis of all landfill locations and minority and poverty populations would decrease the finger pointing phenomena associated with this topic. 
+
